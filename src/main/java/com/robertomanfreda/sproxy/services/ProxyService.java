@@ -26,17 +26,18 @@ public class ProxyService {
 
     private final HttpClient httpClient = HttpClients.createDefault();
 
-    public <T extends HttpRequestBase> HttpResponse doProxy(HttpEntity<?> request, String url, T httpRequest)
+    public <T extends HttpRequestBase> HttpResponse doProxy(HttpEntity<?> request, T httpRequest)
             throws ProxyException, UnsupportedEncodingException {
 
         if (!request.getHeaders().isEmpty()) setHeaders(httpRequest, request);
         if (request.hasBody()) setBody(httpRequest, request);
+
+        String url = httpRequest.getURI().toString();
         if (url.contains(HTTPS) || url.contains(HTTP)) {
             return directProxy(httpRequest);
         } else {
             return automaticProxy(httpRequest, url);
         }
-
     }
 
     private <T extends HttpRequestBase> HttpResponse directProxy(T httpRequest) throws ProxyException {
