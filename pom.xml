@@ -10,7 +10,7 @@
         <relativePath/>
     </parent>
 
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
 
     <groupId>com.robertomanfreda</groupId>
     <artifactId>sproxy</artifactId>
