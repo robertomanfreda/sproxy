@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.2.RELEASE</version>
+        <relativePath/>
+    </parent>
+
+    <packaging>war</packaging>
+
+    <groupId>com.robertomanfreda</groupId>
+    <artifactId>sproxy</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>sproxy</name>
+    <description>Spring Proxy</description>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <lombok.version>1.18.10</lombok.version>
+        <docker-maven-plugin.version>0.31.0</docker-maven-plugin.version>
+    </properties>
+
+    <dependencies>
+        <!--boot web-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!--boot tests-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--httpclient-->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.10</version>
+        </dependency>
+
+        <!--lombok-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>${docker-maven-plugin.version}</version>
+                <configuration>
+                    <verbose>true</verbose>
+                    <images>
+                        <image>
+                            <name>${project.groupId}/${project.artifactId}</name>
+                            <build>
+                                <from>openjdk:11.0.1-jdk-oraclelinux7</from>
+                                <tags>
+                                    <tag>${project.version}</tag>
+                                    <tag>latest</tag>
+                                </tags>
+                                <assembly>
+                                    <descriptorRef>artifact</descriptorRef>
+                                    <targetDir>/opt/</targetDir>
+                                </assembly>
+                                <runCmds>
+                                    <runCmd>mkdir /opt/${project.artifactId}</runCmd>
+                                    <runCmd>mkdir /opt/${project.artifactId}/logs</runCmd>
+                                </runCmds>
+                                <entryPoint>
+                                    <![CDATA[docker run --env SPRING_PROFILES_ACTIVE=local --name ss --rm secwaf]]>
+                                    <exec>
+                                        <arg>java</arg>
+                                        <arg>-jar</arg>
+                                        <arg>-XX:MaxRAMPercentage=20</arg>
+                                        <arg>-XX:+UnlockExperimentalVMOptions</arg>
+                                        <arg>-XX:+EnableJVMCI</arg>
+                                        <arg>-XX:+UseJVMCICompiler</arg>
+                                        <arg>/opt/${project.build.finalName}.war</arg>
+                                    </exec>
+                                </entryPoint>
+                            </build>
+                        </image>
+                    </images>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
