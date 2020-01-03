@@ -8,9 +8,7 @@
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
-            <pattern>%date{"yyyy-MM-dd HH:mm:ss.SSS", Europe/Rome} [%-11thread] %-5level %logger{36} -
-                %msg%n
-            </pattern>
+            <pattern>%date{"yyyy-MM-dd HH:mm:ss.SSS", Europe/Rome} [%-11thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
         <file>${LOG_FILE}.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
