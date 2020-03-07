@@ -46,4 +46,4 @@ Just 4 commands
  - `git clone https://github.com/robertomanfreda/sproxy.git`
  - `cd sproxy`
  - `mvn clean package docker:build`
- - `docker run -d --name secwaf -p 8080:8080 com.robertomanfreda/sproxy:latest`
+ - `docker run -d --name sproxy -p 8080:8080 com.robertomanfreda/sproxy:latest`
