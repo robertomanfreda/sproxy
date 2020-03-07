@@ -14,14 +14,18 @@
 
     <groupId>com.robertomanfreda</groupId>
     <artifactId>sproxy</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
     <name>sproxy</name>
     <description>Spring Proxy</description>
 
     <properties>
-        <java.version>1.8</java.version>
-        <lombok.version>1.18.10</lombok.version>
-        <docker-maven-plugin.version>0.31.0</docker-maven-plugin.version>
+        <java.version>11</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <lombok.version>1.18.12</lombok.version>
+
+        <docker-maven-plugin.version>0.33.0</docker-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -29,19 +33,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <!--boot tests-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.junit.vintage</groupId>
-                    <artifactId>junit-vintage-engine</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <!--httpclient-->
@@ -57,6 +48,19 @@
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!--boot tests-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
@@ -96,7 +100,7 @@
                                     <runCmd>mkdir /opt/${project.artifactId}/logs</runCmd>
                                 </runCmds>
                                 <entryPoint>
-                                    <![CDATA[docker run --env SPRING_PROFILES_ACTIVE=local --name ss --rm secwaf]]>
+                                    <![CDATA[docker run --env SPRING_PROFILES_ACTIVE=local --name ss --rm sproxy]]>
                                     <exec>
                                         <arg>java</arg>
                                         <arg>-jar</arg>
@@ -104,7 +108,7 @@
                                         <arg>-XX:+UnlockExperimentalVMOptions</arg>
                                         <arg>-XX:+EnableJVMCI</arg>
                                         <arg>-XX:+UseJVMCICompiler</arg>
-                                        <arg>/opt/${project.build.finalName}.war</arg>
+                                        <arg>/opt/${project.build.finalName}.jar</arg>
                                     </exec>
                                 </entryPoint>
                             </build>
