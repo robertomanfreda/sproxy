@@ -4,18 +4,14 @@ import com.robertomanfreda.sproxy.exceptions.ProxyException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -30,7 +26,9 @@ public class ProxyService {
             throws ProxyException, UnsupportedEncodingException {
 
         if (!request.getHeaders().isEmpty()) setHeaders(httpRequest, request);
-        if (request.hasBody()) setBody(httpRequest, request);
+
+        // POST
+        //if (request.hasBody()) setBody(httpRequest, request);
 
         String url = httpRequest.getURI().toString();
         if (url.contains(HTTPS) || url.contains(HTTP)) {
@@ -46,7 +44,7 @@ public class ProxyService {
         try {
             httpResponse = httpClient.execute(httpRequest);
         } catch (IOException e) {
-            log.error("directProxyGet(...) failed - using {}", HTTPS);
+            log.error("directProxy failed - using {}", HTTPS);
             throw new ProxyException("Direct proxy ERROR.");
         }
 
@@ -56,17 +54,17 @@ public class ProxyService {
     private <T extends HttpRequestBase> HttpResponse automaticProxy(T httpRequest, String url) throws ProxyException {
         HttpResponse httpResponse;
 
-        // Try using https
+        // Try using HTTPS
         try {
             httpResponse = sendRequestWithCustomProtocol(httpRequest, HTTPS, url);
         } catch (IOException e) {
-            log.error("automaticProxyGet(...) failed - using {} - calling url {}", HTTPS, url);
+            log.error("automaticProx failed - using {} - calling url {}", HTTPS, url);
 
-            // Try using http
+            // Try using HTTP
             try {
                 httpResponse = sendRequestWithCustomProtocol(httpRequest, HTTP, url);
             } catch (IOException ioe) {
-                log.error("automaticProxyGet(...) failed - using {} - calling url {}", HTTP, url);
+                log.error("automaticProxy failed - using {} - calling url {}", HTTP, url);
                 throw new ProxyException("Automatic proxy ERROR.");
             }
         }
@@ -76,14 +74,14 @@ public class ProxyService {
 
     private <T extends HttpRequestBase> void setHeaders(T httpRequest, HttpEntity<?> request) {
         request.getHeaders().forEach((key1, value) -> {
-            // Without ignoring these headers calls will fail!
+            // Without ignoring these headers the request will fail!
             if (!key1.equalsIgnoreCase("host") && !key1.equalsIgnoreCase("content-length")) {
                 httpRequest.addHeader(key1, value.get(0));
             }
         });
     }
 
-    private <T extends HttpRequestBase> void setBody(T httpRequest,
+    /*private <T extends HttpRequestBase> void setBody(T httpRequest,
                                                      HttpEntity<?> request) throws UnsupportedEncodingException {
         List<String> contentType = request.getHeaders().get("content-type");
 
@@ -99,7 +97,7 @@ public class ProxyService {
                     throw new UnsupportedEncodingException("Provided " + contentType.get(0) + " not supported");
             }
         }
-    }
+    }*/
 
     private <T extends HttpRequestBase> HttpResponse sendRequestWithCustomProtocol(T httpRequest, String protocol,
                                                                                    String url) throws IOException {

@@ -1,11 +1,12 @@
 package com.robertomanfreda.sproxy.controllers;
 
+import com.robertomanfreda.sproxy.http.Extractor;
 import com.robertomanfreda.sproxy.services.ProxyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpHead;
 import org.apache.http.util.EntityUtils;
 import org.springframework.http.*;
 import org.springframework.util.MultiValueMap;
@@ -15,116 +16,71 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
 @Slf4j
 @RestController
-@RequestMapping("")
+@RequestMapping("/**")
 @RequiredArgsConstructor
 public class ProxyController {
 
     private final ProxyService proxyService;
+    private final HttpServletRequest httpServletRequest;
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/**")
-    public ResponseEntity<?> delete(HttpServletRequest httpServletRequest) {    // TODO delete
-        return null;
+
+    // Request has body                 No
+    // Successful response has body 	No
+    // Safe 	                        Yes
+    // Idempotent 	                    Yes
+    // Cacheable 	                    Yes
+    // Allowed in HTML forms 	        No
+    @RequestMapping(method = RequestMethod.HEAD)
+    public ResponseEntity<?> head() throws Exception {
+        HttpEntity<?> requestEntity = makeRequestEntity();
+        HttpHead httpRequest = new HttpHead(Extractor.extractEntityUrl(httpServletRequest));
+        return makeResponseEntity(proxyService.doProxy(requestEntity, httpRequest));
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/**")
-    public ResponseEntity<?> get(HttpServletRequest httpServletRequest) throws Exception {
-        HttpEntity<?> request = getHttpEntity(httpServletRequest);
-        HttpGet httpGet = new HttpGet(getEntityUrl(httpServletRequest));
-        return getSuccessResponse(proxyService.doProxy(request, httpGet));
+    // Request has body                 No
+    // Successful response has body 	Yes
+    // Safe 	                        Yes
+    // Idempotent 	                    Yes
+    // Cacheable 	                    Yes
+    // Allowed in HTML forms 	        No
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.ALL_VALUE)
+    public ResponseEntity<?> get() throws Exception {
+        HttpEntity<?> requestEntity = makeRequestEntity();
+        HttpGet httpRequest = new HttpGet(Extractor.extractEntityUrl(httpServletRequest));
+        return makeResponseEntity(proxyService.doProxy(requestEntity, httpRequest));
     }
 
-    @RequestMapping(method = RequestMethod.HEAD, value = "/**", produces = MediaType.ALL_VALUE)
-    public ResponseEntity<?> head(HttpServletRequest httpServletRequest) {
-        return null;
-    }
-
-    @RequestMapping(method = RequestMethod.OPTIONS, value = "/**")
-    public ResponseEntity<?> options(HttpServletRequest httpServletRequest) {
-        return null;
-    }
-
-    @RequestMapping(method = RequestMethod.PATCH, value = "/**")
-    public ResponseEntity<?> patch(HttpServletRequest httpServletRequest) { // TODO patch
-        return null;
-    }
-
-    @RequestMapping(method = RequestMethod.POST, value = "/**",
-            consumes = MediaType.ALL_VALUE, produces = MediaType.ALL_VALUE)
+    // Request has body                 No
+    // Successful response has body 	Yes
+    // Safe 	                        No
+    // Idempotent 	                    No
+    // Cacheable 	                    Only if freshness information is included
+    // Allowed in HTML forms 	        Yes
+    /*@RequestMapping(method = RequestMethod.POST, consumes = MediaType.ALL_VALUE, produces = MediaType.ALL_VALUE)
     public ResponseEntity<?> post(HttpServletRequest httpServletRequest) throws Exception {
-        HttpEntity<?> request = getHttpEntity(httpServletRequest);
-        HttpPost httpPost = new HttpPost(getEntityUrl(httpServletRequest));
-        return getSuccessResponse(proxyService.doProxy(request, httpPost));
-    }
-
-    @RequestMapping(method = RequestMethod.PUT, value = "/**")
-    public ResponseEntity<?> put(HttpServletRequest httpServletRequest) {   // TODO put
         return null;
+    }*/
+
+    // String extractBodyFromBody() {
+    //     String s = httpServletRequest.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+    //     or log.info("Request has no body");
+
+    private HttpEntity<?> makeRequestEntity() {
+        HttpHeaders httpHeaders = Extractor.extractHttpHeaders(httpServletRequest);
+        Map<String, String> urlParameters = Extractor.extractUrlParameters(httpServletRequest);
+        return new HttpEntity<>(urlParameters, httpHeaders);
     }
 
-    @RequestMapping(method = RequestMethod.TRACE, value = "/**")
-    public ResponseEntity<?> trace(HttpServletRequest httpServletRequest) { // TODO trace
-        return null;
-    }
-
-    private HttpEntity<?> getHttpEntity(HttpServletRequest httpServletRequest) throws IOException {
-        HttpEntity<?> request;
-
-        HttpHeaders httpHeaders = (Collections
-                .list(httpServletRequest.getHeaderNames())
-                .stream()
-                .collect(Collectors.toMap(
-                        Function.identity(),
-                        h -> Collections.list(httpServletRequest.getHeaders(h)),
-                        (oldValue, newValue) -> newValue,
-                        HttpHeaders::new
-                ))
-        );
-
-        String body = httpServletRequest.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        if (!body.isEmpty()) {
-            request = new HttpEntity<>(body, httpHeaders);
-        } else {
-            Map<String, String> payload = new HashMap<>();
-            Stream.of(httpServletRequest.getParameterMap()).forEach(stringMap -> stringMap.forEach((k, v) ->
-                    Stream.of(v).forEach(value -> payload.put(k, value))
-            ));
-            request = new HttpEntity<>(payload, httpHeaders);
-        }
-
-        return request;
-    }
-
-    private String getEntityUrl(HttpServletRequest httpServletRequest) {
-        final StringBuilder url = new StringBuilder(httpServletRequest.getRequestURI()
-                .replaceFirst("/", ""));
-
-        if (httpServletRequest.getParameterMap().size() > 0) {
-            url.append("?");
-            Stream.of(httpServletRequest.getParameterMap())
-                    .forEach(stringMap -> stringMap
-                            .forEach((key, value) -> url.append(key).append("=").append(value[0]).append("&")));
-            url.deleteCharAt(url.length() - 1);
-        }
-
-        return url.toString();
-    }
-
-    private ResponseEntity<?> getSuccessResponse(HttpResponse httpResponse) throws IOException {
-        String entity = "";
-        if (null != httpResponse.getEntity()) {
-            entity = EntityUtils.toString(httpResponse.getEntity());
-        }
+    private ResponseEntity<?> makeResponseEntity(HttpResponse httpResponse) throws IOException {
+        // Some response has no response body so we return an emty string
+        String responseBody = null != httpResponse.getEntity() ? EntityUtils.toString(httpResponse.getEntity()) : "";
 
         MultiValueMap<String, String> responseHeaders = new HttpHeaders();
         Stream.of(httpResponse.getAllHeaders()).forEach(header ->
@@ -132,7 +88,7 @@ public class ProxyController {
         );
 
         return new ResponseEntity<>(
-                entity,
+                responseBody,
                 responseHeaders,
                 Objects.requireNonNull(HttpStatus.resolve(httpResponse.getStatusLine().getStatusCode()))
         );
