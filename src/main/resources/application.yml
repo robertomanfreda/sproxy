@@ -6,16 +6,10 @@ spring:
     image:
       invert: false
 
+
 # LOCAL ENVIRONMENT PROFILE CONFIGS
 ---
 spring:
   profiles: local
   http:
     log-request-details: true
-
-# PROD ENVIRONMENT PROFILE CONFIGS
----
-spring:
-  profiles: prod
-  http:
-    log-request-details: false
