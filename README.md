@@ -1,5 +1,5 @@
 # Sproxy
-####A Proxy developed using the Spring Framework and Java
+#### A Proxy developed using the Spring Framework and Java
 
 This project demonstrates the power of the [Spring Framework](https://pivotal.io/spring-app-framework) and how
 immediate it can be to manage complex infrastructures with the help of [Docker](https://www.docker.com/).  
