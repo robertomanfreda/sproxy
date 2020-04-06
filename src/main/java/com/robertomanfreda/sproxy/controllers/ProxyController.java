@@ -79,7 +79,7 @@ public class ProxyController {
     }
 
     /**
-     * Request has body                 No
+     * Request has body                 Yes
      * Successful response has body     Yes
      * Safe 	                        No
      * Idempotent                       No
