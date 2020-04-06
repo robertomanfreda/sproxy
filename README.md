@@ -52,8 +52,6 @@ Just 4 commands
 ---
 ###### Testing Sproxy
 SProxy comes up with a useful postman collection that grants continuous testing and helps the developer to test every
-single REST endpoint during the development phase.  
-The file can be found under src/test/resources/SProxy.postman_collection.json. Import the file into Postman and run
-the collection using the Postman runner.  
-Developers who contributes to the project should add always test methods in the postman collection and push
-the changes on the public repository. 
+single REST endpoint during the development phase.    
+The collection can be run using the Postman runner.  
+Here's the public access: https://documenter.getpostman.com/view/5504064/SzYdSGSb
