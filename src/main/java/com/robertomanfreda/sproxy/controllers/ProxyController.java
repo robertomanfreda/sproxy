@@ -42,11 +42,11 @@ public class ProxyController {
 
     /**
      * Request has body                 No
-     * Successful response has body 	No
+     * Successful response has body     No
      * Safe 	                        Yes
-     * Idempotent 	                    Yes
-     * Cacheable 	                    Yes
-     * Allowed in HTML forms 	        No
+     * Idempotent                       Yes
+     * Cacheable                        Yes
+     * Allowed in HTML forms            No
      *
      * @return {@link ResponseEntity}
      * @throws ProxyException // TODO ProxyException in HEAD
@@ -61,11 +61,11 @@ public class ProxyController {
 
     /**
      * Request has body                 No
-     * Successful response has body 	Yes
+     * Successful response has body     Yes
      * Safe 	                        Yes
-     * Idempotent 	                    Yes
-     * Cacheable 	                    Yes
-     * Allowed in HTML forms 	        No
+     * Idempotent                       Yes
+     * Cacheable                        Yes
+     * Allowed in HTML forms            No
      *
      * @return {@link ResponseEntity}
      * @throws ProxyException // TODO ProxyException in GET
@@ -80,11 +80,11 @@ public class ProxyController {
 
     /**
      * Request has body                 No
-     * Successful response has body 	Yes
+     * Successful response has body     Yes
      * Safe 	                        No
-     * Idempotent 	                    No
-     * Cacheable 	                    Only if freshness information is included
-     * Allowed in HTML forms 	        Yes
+     * Idempotent                       No
+     * Cacheable                        Only if freshness information is included
+     * Allowed in HTML forms            Yes
      *
      * @return {@link ResponseEntity}
      * @throws ProxyException // TODO ProxyException in POST
