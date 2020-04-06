@@ -10,7 +10,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 
 @Slf4j
@@ -22,13 +21,11 @@ public class ProxyService {
 
     private final HttpClient httpClient = HttpClients.createDefault();
 
-    public <T extends HttpRequestBase> HttpResponse doProxy(HttpEntity<?> request, T httpRequest)
-            throws ProxyException, UnsupportedEncodingException {
+    public <T extends HttpRequestBase> HttpResponse doProxy(HttpEntity<?> request, T httpRequest) throws ProxyException {
 
-        if (!request.getHeaders().isEmpty()) setHeaders(httpRequest, request);
-
-        // POST
-        //if (request.hasBody()) setBody(httpRequest, request);
+        if (!request.getHeaders().isEmpty()) {
+            setHeaders(httpRequest, request);
+        }
 
         String url = httpRequest.getURI().toString();
         if (url.contains(HTTPS) || url.contains(HTTP)) {
@@ -58,7 +55,7 @@ public class ProxyService {
         try {
             httpResponse = sendRequestWithCustomProtocol(httpRequest, HTTPS, url);
         } catch (IOException e) {
-            log.error("automaticProx failed - using {} - calling url {}", HTTPS, url);
+            log.error("automaticProxy failed - using {} - calling url {}", HTTPS, url);
 
             // Try using HTTP
             try {
@@ -73,31 +70,14 @@ public class ProxyService {
     }
 
     private <T extends HttpRequestBase> void setHeaders(T httpRequest, HttpEntity<?> request) {
-        request.getHeaders().forEach((key1, value) -> {
+        request.getHeaders().forEach((key, value) -> {
             // Without ignoring these headers the request will fail!
-            if (!key1.equalsIgnoreCase("host") && !key1.equalsIgnoreCase("content-length")) {
-                httpRequest.addHeader(key1, value.get(0));
+            if (!key.equalsIgnoreCase("host") &&
+                    !key.equalsIgnoreCase("content-length")) {
+                httpRequest.addHeader(key, value.get(0));
             }
         });
     }
-
-    /*private <T extends HttpRequestBase> void setBody(T httpRequest,
-                                                     HttpEntity<?> request) throws UnsupportedEncodingException {
-        List<String> contentType = request.getHeaders().get("content-type");
-
-        if (null != request.getBody() && null != contentType) {
-            switch (contentType.get(0)) {
-                case MediaType.APPLICATION_JSON_VALUE:
-                    // TODO should manage with other types too
-                    ((HttpPost) httpRequest).setEntity(new StringEntity(request.getBody().toString()));
-                    break;
-                case MediaType.APPLICATION_FORM_URLENCODED_VALUE:
-                    break;
-                default:
-                    throw new UnsupportedEncodingException("Provided " + contentType.get(0) + " not supported");
-            }
-        }
-    }*/
 
     private <T extends HttpRequestBase> HttpResponse sendRequestWithCustomProtocol(T httpRequest, String protocol,
                                                                                    String url) throws IOException {

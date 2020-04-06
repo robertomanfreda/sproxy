@@ -42,11 +42,16 @@ public class Extractor {
                 );
     }
 
-    public static Map<String, String> extractUrlParameters(HttpServletRequest request) {
+    public static Map<String, String> extractQueryParameters(HttpServletRequest request) {
         Map<String, String> parameters = new HashMap<>();
 
-        Stream.of(request.getParameterMap()).forEach(stringMap -> stringMap.forEach((k, v) ->
-                Stream.of(v).forEach(value -> parameters.put(k, value))
+        Stream.of(request.getParameterMap()).forEach(stringMap -> stringMap.forEach((key, values) -> {
+                    Stream.of(values).forEach(value -> {
+                        if (request.getQueryString().contains(key + "=" + value)) {
+                            parameters.put(key, value);
+                        }
+                    });
+                }
         ));
 
         return parameters;
