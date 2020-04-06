@@ -11,7 +11,10 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.util.EntityUtils;
 import org.springframework.http.*;
 import org.springframework.util.MultiValueMap;
@@ -19,10 +22,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -42,11 +48,11 @@ public class ProxyController {
 
     /**
      * Request has body                 No
-     * Successful response has body 	No
+     * Successful response has body     No
      * Safe 	                        Yes
-     * Idempotent 	                    Yes
-     * Cacheable 	                    Yes
-     * Allowed in HTML forms 	        No
+     * Idempotent                       Yes
+     * Cacheable                        Yes
+     * Allowed in HTML forms            No
      *
      * @return {@link ResponseEntity}
      * @throws ProxyException // TODO ProxyException in HEAD
@@ -61,11 +67,11 @@ public class ProxyController {
 
     /**
      * Request has body                 No
-     * Successful response has body 	Yes
+     * Successful response has body     Yes
      * Safe 	                        Yes
-     * Idempotent 	                    Yes
-     * Cacheable 	                    Yes
-     * Allowed in HTML forms 	        No
+     * Idempotent                       Yes
+     * Cacheable                        Yes
+     * Allowed in HTML forms            No
      *
      * @return {@link ResponseEntity}
      * @throws ProxyException // TODO ProxyException in GET
@@ -79,33 +85,60 @@ public class ProxyController {
     }
 
     /**
-     * Request has body                 No
-     * Successful response has body 	Yes
+     * Request has body                 Yes
+     * Successful response has body     Yes
      * Safe 	                        No
-     * Idempotent 	                    No
-     * Cacheable 	                    Only if freshness information is included
-     * Allowed in HTML forms 	        Yes
+     * Idempotent                       No
+     * Cacheable                        Only if freshness information is included
+     * Allowed in HTML forms            Yes
      *
      * @return {@link ResponseEntity}
      * @throws ProxyException // TODO ProxyException in POST
      * @throws IOException    // TODO IOException in POST
      */
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.ALL_VALUE, produces = MediaType.ALL_VALUE)
-    public ResponseEntity<?> post() throws ProxyException, IOException {
+    public ResponseEntity<?> post() throws ProxyException, IOException, ServletException {
         HttpEntity<?> requestEntity = makeRequestEntity();
         HttpPost httpRequest = new HttpPost(Extractor.extractEntityUrl(httpServletRequest));
 
-        // raw request
-        BufferedReader reader = new BufferedReader(new InputStreamReader(httpServletRequest.getInputStream(), UTF_8));
-        String body = reader.lines().collect(Collectors.joining(System.lineSeparator()));
-        if (body.length() > 0) {
-            httpRequest.setEntity(new StringEntity(body));
-        }
+        String type = httpServletRequest.getContentType();
+        if (type.contains("application/x-www-form-urlencoded")) {
+            List<NameValuePair> parameters = Extractor.extractFormParameters(httpServletRequest);
+            if (parameters.size() > 0) {
+                httpRequest.setEntity(new UrlEncodedFormEntity(parameters));
+            }
+        } else if (type.contains("multipart/form-data")) {
+            Collection<Part> parts = httpServletRequest.getParts();
+            if (parts.size() > 0) {
+                MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+                builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+                MediaType contentType = requestEntity.getHeaders().getContentType();
+                if (null != contentType) {
+                    builder.setBoundary(contentType.getParameter("boundary"));
+                }
 
-        // x-www-form-urlencoded request
-        List<NameValuePair> parameters = Extractor.extractFormParameters(httpServletRequest);
-        if (parameters.size() > 0) {
-            httpRequest.setEntity(new UrlEncodedFormEntity(parameters));
+                for (Part part : parts) {
+                    if (null != part.getContentType()) {
+                        builder.addBinaryBody(
+                                part.getName(), part.getInputStream().readAllBytes(),
+                                ContentType.MULTIPART_FORM_DATA, part.getSubmittedFileName()
+                        );
+                    } else {
+                        builder.addTextBody(part.getName(), new String(part.getInputStream().readAllBytes()));
+                    }
+                }
+
+                httpRequest.setEntity(builder.build());
+            }
+        } else {
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(httpServletRequest.getInputStream(), UTF_8)
+            );
+
+            String body = reader.lines().collect(Collectors.joining(System.lineSeparator()));
+            if (body.length() > 0) {
+                httpRequest.setEntity(new StringEntity(body));
+            }
         }
 
         return makeResponseEntity(proxyService.doProxy(requestEntity, httpRequest));
@@ -133,27 +166,5 @@ public class ProxyController {
                 Objects.requireNonNull(HttpStatus.resolve(httpResponse.getStatusLine().getStatusCode()))
         );
     }
-
-    // String extractBodyFromBody() {
-    //     String s = httpServletRequest.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-    //     or log.info("Request has no body");
-
-    /*private <T extends HttpRequestBase> void setBody(T httpRequest,
-                                                     HttpEntity<?> request) throws UnsupportedEncodingException {
-        List<String> contentType = request.getHeaders().get("content-type");
-
-        if (null != request.getBody() && null != contentType) {
-            switch (contentType.get(0)) {
-                case MediaType.APPLICATION_JSON_VALUE:
-                    // TODO should manage with other types too
-                    ((HttpPost) httpRequest).setEntity(new StringEntity(request.getBody().toString()));
-                    break;
-                case MediaType.APPLICATION_FORM_URLENCODED_VALUE:
-                    break;
-                default:
-                    throw new UnsupportedEncodingException("Provided " + contentType.get(0) + " not supported");
-            }
-        }
-    }*/
 
 }

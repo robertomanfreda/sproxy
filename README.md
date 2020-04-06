@@ -7,26 +7,26 @@ immediate it can be to manage complex infrastructures with the help of [Docker](
 ---
 ###### What is Sproxy
 
-Sproxy is a real proxy, it captures the requests supported by Spring:  
+Sproxy is a real proxy, it captures the requests (supported by the Spring framework) and forwards them to the requested url:  
 
- - GET
- - HEAD
- - POST
- - DELETE  
- - OPTIONS
- - PATCH
- - PUT
- - TRACE
-   
-and forwards them to the requested url (current implementation only supports HEAD and GET).
+HTTP METHOD     | IMPLEMENTATION STATE
+--------------- | ---------------
+GET             | implemented
+HEAD            | implemented
+POST            | implemented
+DELETE          | not implemented
+OPTIONS         | not implemented
+PATCH           | not implemented
+PUT             | not implemented
+TRACE           | not implemented   
 
 ---
 ###### Sproxy features
 
-It is possible to specify the protocol, for instance specifying HTTPS   
+It is possible to specify the protocol, for instance specifying HTTPS  
 `http://localhost:8080/http://postman-echo.com/get?foo1=bar1`  
 
-Or HTTP  
+Or HTTPS  
 `http://localhost:8080/https://postman-echo.com/get?foo1=bar1`  
 
 When no protocol is specified Sproxy will try to proxy the request, to the requested URL, using HTTPS first;  
@@ -47,3 +47,11 @@ Just 4 commands
  - `cd sproxy`
  - `mvn clean package docker:build`
  - `docker run -d --name sproxy -p 8080:8080 com.robertomanfreda/sproxy:latest`
+
+
+---
+###### Testing Sproxy
+SProxy comes up with a useful postman collection that grants continuous testing and helps the developer to test every
+single REST endpoint during the development phase.    
+The collection can be run using the Postman runner.  
+Here's the public access: https://documenter.getpostman.com/view/5504064/SzYdSGSb
