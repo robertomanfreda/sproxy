@@ -9,14 +9,16 @@ immediate it can be to manage complex infrastructures with the help of [Docker](
 
 Sproxy is a real proxy, it captures the requests supported by Spring:  
 
- - GET
- - HEAD
- - POST
- - DELETE  
- - OPTIONS
- - PATCH
- - PUT
- - TRACE
+HTTP METHOD     | IMPLEMENTATION STATE
+--------------- | ---------------
+GET             | implemented
+HEAD            | implemented
+POST            | implementing
+DELETE          | not implemented
+OPTIONS         | not implemented
+PATCH           | not implemented
+PUT             | not implemented
+TRACE           | not implemented   
    
 and forwards them to the requested url (current implementation only supports HEAD and GET).
 
@@ -47,3 +49,13 @@ Just 4 commands
  - `cd sproxy`
  - `mvn clean package docker:build`
  - `docker run -d --name sproxy -p 8080:8080 com.robertomanfreda/sproxy:latest`
+
+
+---
+###### Testing Sproxy
+SProxy comes up with a useful postman collection that grants continuous testing and helps the developer to test every
+single REST endpoint during the development phase.  
+The file can be found under src/test/resources/SProxy.postman_collection.json. Import the file into Postman and run
+the collection using the Postman runner.  
+Developers who contributes to the project should add always test methods in the postman collection and push
+the changes on the public repository. 
