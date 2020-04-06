@@ -23,10 +23,10 @@ TRACE           | not implemented
 ---
 ###### Sproxy features
 
-It is possible to specify the protocol, for instance specifying HTTPS   
+It is possible to specify the protocol, for instance specifying HTTPS  
 `http://localhost:8080/http://postman-echo.com/get?foo1=bar1`  
 
-Or HTTP  
+Or HTTPS  
 `http://localhost:8080/https://postman-echo.com/get?foo1=bar1`  
 
 When no protocol is specified Sproxy will try to proxy the request, to the requested URL, using HTTPS first;  
