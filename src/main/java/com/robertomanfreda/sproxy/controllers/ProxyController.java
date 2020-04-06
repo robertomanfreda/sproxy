@@ -6,9 +6,12 @@ import com.robertomanfreda.sproxy.services.ProxyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
 import org.springframework.http.*;
 import org.springframework.util.MultiValueMap;
@@ -17,11 +20,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Slf4j
 @RestController
@@ -83,19 +91,25 @@ public class ProxyController {
      * @throws IOException    // TODO IOException in POST
      */
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.ALL_VALUE, produces = MediaType.ALL_VALUE)
-    // TODO POST
     public ResponseEntity<?> post() throws ProxyException, IOException {
         HttpEntity<?> requestEntity = makeRequestEntity();
         HttpPost httpRequest = new HttpPost(Extractor.extractEntityUrl(httpServletRequest));
 
-        // TODO BODY?!
+        // raw request
+        BufferedReader reader = new BufferedReader(new InputStreamReader(httpServletRequest.getInputStream(), UTF_8));
+        String body = reader.lines().collect(Collectors.joining(System.lineSeparator()));
+        if (body.length() > 0) {
+            httpRequest.setEntity(new StringEntity(body));
+        }
+
+        // x-www-form-urlencoded request
+        List<NameValuePair> parameters = Extractor.extractFormParameters(httpServletRequest);
+        if (parameters.size() > 0) {
+            httpRequest.setEntity(new UrlEncodedFormEntity(parameters));
+        }
 
         return makeResponseEntity(proxyService.doProxy(requestEntity, httpRequest));
     }
-
-    // String extractBodyFromBody() {
-    //     String s = httpServletRequest.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-    //     or log.info("Request has no body");
 
     private HttpEntity<?> makeRequestEntity() {
         HttpHeaders httpHeaders = Extractor.extractHttpHeaders(httpServletRequest);
@@ -120,8 +134,11 @@ public class ProxyController {
         );
     }
 
+    // String extractBodyFromBody() {
+    //     String s = httpServletRequest.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+    //     or log.info("Request has no body");
 
-        /*private <T extends HttpRequestBase> void setBody(T httpRequest,
+    /*private <T extends HttpRequestBase> void setBody(T httpRequest,
                                                      HttpEntity<?> request) throws UnsupportedEncodingException {
         List<String> contentType = request.getHeaders().get("content-type");
 

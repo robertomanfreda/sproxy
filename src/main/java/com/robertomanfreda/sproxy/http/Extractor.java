@@ -1,12 +1,12 @@
 package com.robertomanfreda.sproxy.http;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.springframework.http.HttpHeaders;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -43,14 +43,14 @@ public class Extractor {
                 );
     }
 
-    public static Map<String, String> extractQueryParameters(HttpServletRequest request) {
-        Map<String, String> parameters = new HashMap<>();
+    public static List<NameValuePair> extractFormParameters(HttpServletRequest request) {
+        List<NameValuePair> parameters = new ArrayList<>();
 
         Stream.of(request.getParameterMap()).forEach(stringMap -> stringMap.forEach((key, values) -> {
                     Stream.of(values).forEach(value -> {
-                        String queryString = request.getQueryString();
-                        if (null != queryString && queryString.contains(key + "=" + value)) {
-                            parameters.put(key, value);
+                        String queryString = Optional.ofNullable(request.getQueryString()).orElse("");
+                        if (!queryString.contains(key + "=" + value)) {
+                            parameters.add(new BasicNameValuePair(key, value));
                         }
                     });
                 }
@@ -59,4 +59,19 @@ public class Extractor {
         return parameters;
     }
 
+    public static Map<String, String> extractQueryParameters(HttpServletRequest request) {
+        Map<String, String> parameters = new HashMap<>();
+
+        Stream.of(request.getParameterMap()).forEach(stringMap -> stringMap.forEach((key, values) -> {
+            Stream.of(values).forEach(value -> {
+                String queryString = request.getQueryString();
+                if (null != queryString && queryString.contains(key + "=" + value)) {
+                    parameters.put(key, value);
+                }
+                    });
+                }
+        ));
+
+        return parameters;
+    }
 }
