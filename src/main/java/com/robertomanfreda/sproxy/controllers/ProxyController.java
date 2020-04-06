@@ -87,6 +87,9 @@ public class ProxyController {
     public ResponseEntity<?> post() throws ProxyException, IOException {
         HttpEntity<?> requestEntity = makeRequestEntity();
         HttpPost httpRequest = new HttpPost(Extractor.extractEntityUrl(httpServletRequest));
+
+        // TODO BODY?!
+
         return makeResponseEntity(proxyService.doProxy(requestEntity, httpRequest));
     }
 

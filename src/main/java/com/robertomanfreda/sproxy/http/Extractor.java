@@ -15,17 +15,18 @@ import java.util.stream.Stream;
 public class Extractor {
 
     public static String extractEntityUrl(HttpServletRequest httpServletRequest) {
-        final StringBuilder url = new StringBuilder(httpServletRequest.getRequestURI().replaceFirst("/", ""));
-        if (httpServletRequest.getParameterMap().size() > 0) {
-            url.append("?");
-            Stream.of(httpServletRequest.getParameterMap()).forEach(
-                    parameters -> parameters.forEach(
-                            (key, value) -> url.append(key).append("=").append(value[0]).append("&")
-                    )
-            );
-            url.deleteCharAt(url.length() - 1);
+        String queryString = httpServletRequest.getQueryString();
+
+        StringBuilder urlBuilder = new StringBuilder(
+                httpServletRequest.getRequestURI().replaceFirst("/", "")
+        );
+
+        if (null != queryString) {
+            urlBuilder.append("?");
+            urlBuilder.append(queryString);
         }
-        return url.toString();
+
+        return urlBuilder.toString();
     }
 
     public static HttpHeaders extractHttpHeaders(HttpServletRequest request) {
@@ -47,7 +48,8 @@ public class Extractor {
 
         Stream.of(request.getParameterMap()).forEach(stringMap -> stringMap.forEach((key, values) -> {
                     Stream.of(values).forEach(value -> {
-                        if (request.getQueryString().contains(key + "=" + value)) {
+                        String queryString = request.getQueryString();
+                        if (null != queryString && queryString.contains(key + "=" + value)) {
                             parameters.put(key, value);
                         }
                     });
