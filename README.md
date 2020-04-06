@@ -13,7 +13,7 @@ HTTP METHOD     | IMPLEMENTATION STATE
 --------------- | ---------------
 GET             | implemented
 HEAD            | implemented
-POST            | implementing
+POST            | implemented
 DELETE          | not implemented
 OPTIONS         | not implemented
 PATCH           | not implemented
