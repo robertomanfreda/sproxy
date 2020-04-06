@@ -1,12 +1,12 @@
 package com.robertomanfreda.sproxy.http;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.springframework.http.HttpHeaders;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -15,17 +15,18 @@ import java.util.stream.Stream;
 public class Extractor {
 
     public static String extractEntityUrl(HttpServletRequest httpServletRequest) {
-        final StringBuilder url = new StringBuilder(httpServletRequest.getRequestURI().replaceFirst("/", ""));
-        if (httpServletRequest.getParameterMap().size() > 0) {
-            url.append("?");
-            Stream.of(httpServletRequest.getParameterMap()).forEach(
-                    parameters -> parameters.forEach(
-                            (key, value) -> url.append(key).append("=").append(value[0]).append("&")
-                    )
-            );
-            url.deleteCharAt(url.length() - 1);
+        String queryString = httpServletRequest.getQueryString();
+
+        StringBuilder urlBuilder = new StringBuilder(
+                httpServletRequest.getRequestURI().replaceFirst("/", "")
+        );
+
+        if (null != queryString) {
+            urlBuilder.append("?");
+            urlBuilder.append(queryString);
         }
-        return url.toString();
+
+        return urlBuilder.toString();
     }
 
     public static HttpHeaders extractHttpHeaders(HttpServletRequest request) {
@@ -42,14 +43,35 @@ public class Extractor {
                 );
     }
 
-    public static Map<String, String> extractUrlParameters(HttpServletRequest request) {
-        Map<String, String> parameters = new HashMap<>();
+    public static List<NameValuePair> extractFormParameters(HttpServletRequest request) {
+        List<NameValuePair> parameters = new ArrayList<>();
 
-        Stream.of(request.getParameterMap()).forEach(stringMap -> stringMap.forEach((k, v) ->
-                Stream.of(v).forEach(value -> parameters.put(k, value))
+        Stream.of(request.getParameterMap()).forEach(stringMap -> stringMap.forEach((key, values) -> {
+                    Stream.of(values).forEach(value -> {
+                        String queryString = Optional.ofNullable(request.getQueryString()).orElse("");
+                        if (!queryString.contains(key + "=" + value)) {
+                            parameters.add(new BasicNameValuePair(key, value));
+                        }
+                    });
+                }
         ));
 
         return parameters;
     }
 
+    public static Map<String, String> extractQueryParameters(HttpServletRequest request) {
+        Map<String, String> parameters = new HashMap<>();
+
+        Stream.of(request.getParameterMap()).forEach(stringMap -> stringMap.forEach((key, values) -> {
+            Stream.of(values).forEach(value -> {
+                String queryString = request.getQueryString();
+                if (null != queryString && queryString.contains(key + "=" + value)) {
+                    parameters.put(key, value);
+                }
+                    });
+                }
+        ));
+
+        return parameters;
+    }
 }
