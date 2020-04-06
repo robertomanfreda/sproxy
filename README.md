@@ -7,7 +7,7 @@ immediate it can be to manage complex infrastructures with the help of [Docker](
 ---
 ###### What is Sproxy
 
-Sproxy is a real proxy, it captures the requests supported by Spring:  
+Sproxy is a real proxy, it captures the requests (supported by the Spring framework) and forwards them to the requested url:  
 
 HTTP METHOD     | IMPLEMENTATION STATE
 --------------- | ---------------
@@ -19,8 +19,6 @@ OPTIONS         | not implemented
 PATCH           | not implemented
 PUT             | not implemented
 TRACE           | not implemented   
-   
-and forwards them to the requested url (current implementation only supports HEAD and GET).
 
 ---
 ###### Sproxy features
