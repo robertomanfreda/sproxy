@@ -15,11 +15,9 @@ jobs:
           java-version: 11
       - name: Build with Maven
         run: mvn -B package --file pom.xml docker:build
-      - name: Log into registry
+      - name: custom
         run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
-      - name: Docker build
-        run: mvn docker:build
+          docker imaqges
       - name: Docker push
         run: |
           docker tag robertoman/sproxy:latest docker.pkg.github.com/robertoman/sproxy:latest
