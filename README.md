@@ -1,4 +1,6 @@
 # Sproxy
+![Java CI with Maven](https://github.com/robertomanfreda/sproxy/workflows/Java%20CI%20with%20Maven/badge.svg)
+
 #### A Proxy developed using the Spring Framework and Java
 
 This project demonstrates the power of the [Spring Framework](https://pivotal.io/spring-app-framework) and how
