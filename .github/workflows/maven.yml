@@ -18,11 +18,7 @@ jobs:
       - name: Log into registry
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
-          echo "${{ secrets.GITHUB_TOKEN }}"
-          echo ${{ github.actor }}
-      - name: Push with Maven
-        run: |
-          mvn docker:build
-          docker images
-          echo ""
-          docker push robertoman/sproxy:latest
+      - name: Docker build
+        run: mvn docker:build
+      - name: Docker push
+        run: docker push docker.pkg.github.com/robertoman/sproxy:latest
