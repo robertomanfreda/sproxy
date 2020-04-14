@@ -1,4 +1,4 @@
-package com.robertomanfreda.sproxy;
+package com.robertoman.sproxy;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
