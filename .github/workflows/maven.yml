@@ -20,7 +20,6 @@ jobs:
       - name: Push image
         run: |
           IMAGE_ID="robertoman/sproxy"
-          VERSION="lastest"
-          TAG="$IMAGE_ID$VERSION"
+          VERSION="latest"
           docker tag image $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
