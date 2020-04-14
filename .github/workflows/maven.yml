@@ -20,9 +20,9 @@ jobs:
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
-      - name: Build :latest
-        run: docker build -t ${GITHUB_REPOSITORY}:latest .
-      - name: Push to docker hub :latest
-        uses: actions-hub/docker@master
-        with:
-          args: push ${GITHUB_REPOSITORY}:latest
+      uses: docker/build-push-action@v1
+      with:
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_USERNAME }}
+        repository: robertoman/sproxy
+        tags: latest
