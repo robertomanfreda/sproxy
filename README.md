@@ -43,12 +43,16 @@ The port can also be specified directly in the request
 `http://localhost:8080/postman-echo.com:443/get?foo1=bar1`
 
 ---
-###### I want to try Sproxy  
-Just 4 commands  
+###### I want to try Sproxy
+Pulling image from https://hub.docker.com/r/robertoman/sproxy:  
+- `docker pull robertoman/sproxy:latest`
+or compiling the image
  - `git clone https://github.com/robertomanfreda/sproxy.git`
  - `cd sproxy`
- - `mvn clean package docker:build`
- - `docker run -d --name sproxy -p 8080:8080 com.robertomanfreda/sproxy:latest`
+   - `mvn clean package docker:build`  
+   or  
+   - `docker build -t robertoman/sproxy:latest .`  
+ - `docker run -d --name sproxy -p 8080:8080 com.robertoman/sproxy:latest`
 
 
 ---
