@@ -29,7 +29,5 @@ jobs:
       - name: Docker :build
         run: mvn docker:build
       - name: Docker :push
-        if: github.ref == 'refs/heads/master'
-          run: docker push robertoman/sproxy:latest
-        else if: github.ref == 'refs/heads/develop'
+        if: github.ref == 'refs/heads/develop'
           run: docker push robertoman/sproxy:0.0.2-SNAPSHOT
