@@ -44,15 +44,15 @@ The port can also be specified directly in the request
 
 ---
 ###### I want to try Sproxy
-Pulling image from https://hub.docker.com/r/robertoman/sproxy:  
+Pulling image from https://hub.docker.com/r/robertoman/sproxy:    
 - `docker pull robertoman/sproxy:latest`
-or compiling the image
- - `git clone https://github.com/robertomanfreda/sproxy.git`
- - `cd sproxy`
-   - `mvn clean package docker:build`  
-   or  
-   - `docker build -t robertoman/sproxy:latest .`  
- - `docker run -d --name sproxy -p 8080:8080 com.robertoman/sproxy:latest`
+  
+or compiling the image   
+  
+- `git clone https://github.com/robertomanfreda/sproxy.git`
+- `cd sproxy`
+  - `mvn clean package docker:build` or `docker build -t robertoman/sproxy:latest .`  
+- `docker run -d --name sproxy -p 8080:8080 com.robertoman/sproxy:latest`
 
 
 ---
