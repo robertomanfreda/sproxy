@@ -33,10 +33,12 @@ jobs:
         run: docker login -u "$USERNAME" -p "$PASSWORD" docker.io
       - name: Docker :build
         run: mvn docker:build
-      - name: Docker :push develop
-        run: docker push robertoman/sproxy:0.0.2-SNAPSHOT
+      - name: Docker :push versioned
+        run: docker push robertoman/sproxy:$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+      - name: Docker :push dev-latest
+        run: docker push robertoman/sproxy:dev-latest
         if: github.ref == 'refs/heads/develop'
-      - name: Docker :push master
+      - name: Docker :push latest
         run: docker push robertoman/sproxy:latest
         if: github.ref == 'refs/heads/master'
 
