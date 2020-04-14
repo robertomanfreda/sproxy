@@ -1,6 +1,6 @@
-package com.robertomanfreda.sproxy.services;
+package com.robertoman.sproxy.services;
 
-import com.robertomanfreda.sproxy.exceptions.ProxyException;
+import com.robertoman.sproxy.exceptions.ProxyException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
