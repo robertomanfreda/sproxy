@@ -86,7 +86,7 @@
                     <verbose>true</verbose>
                     <images>
                         <image>
-                            <name>${project.groupId}/${project.artifactId}</name>
+                            <name>robertoman/${project.artifactId}</name>
                             <build>
                                 <from>adoptopenjdk/openjdk11:latest</from>
                                 <tags>
