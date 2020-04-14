@@ -18,6 +18,6 @@ jobs:
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
       - name: Push with Maven
-          run: |
-            mvn docker:build
-            docker images
+        run: |
+          mvn docker:build
+          docker images
