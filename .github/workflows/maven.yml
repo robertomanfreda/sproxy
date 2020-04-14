@@ -16,7 +16,7 @@ jobs:
       - name: Maven :build
         run: mvn -B package --file pom.xml
       - name: Docker :build
-        run: docker build -t robertoman/sproxy:latest .
+        run: "docker build -t robertoman/sproxy:latest ."
       - name: Docker :login
         run: echo {{ github.DOCKER_HUB_PASSWORD }} | docker login -u ${{ github.DOCKER_HUB_USERNAME }} --password-stdin
       - name: Docker :push
