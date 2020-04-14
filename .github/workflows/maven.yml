@@ -16,14 +16,8 @@ jobs:
       - name: Maven :build
         run: mvn -B package --file pom.xml
       - name: Docker :login
-        uses: actions-hub/docker/login@master
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
-      - name: t
-        uses: docker/build-push-action@v1
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_USERNAME }}
-          repository: robertoman/sproxy
-          tags: latest
+        run: docker login -u robertoman -p test12345 docker.io
+      - name: Docker :build
+        run: docker build -t robertoman/sproxy:latest .
+      - name: Docker :push
+        run: docker push robertoman/sproxy:latest
