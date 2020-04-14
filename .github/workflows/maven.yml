@@ -15,12 +15,17 @@ jobs:
     steps:
       - run: 'echo "Current ref is: ${{github.ref}}"'
       - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
       - name: Set up JDK 11
         uses: actions/setup-java@v1
         with:
           java-version: 11
       - name: Maven :build
-        run: mvn -B package --file pom.xml
+        run: mvn -B -U clean package --file pom.xml
       - name: Docker :login
         env:
           USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
@@ -31,7 +36,7 @@ jobs:
       - name: Docker :push develop
         run: docker push robertoman/sproxy:0.0.2-SNAPSHOT
         if: github.ref == 'refs/heads/develop'
-      - name: Docker :push maset
-        run: docker push robertoman/sproxy:0.0.2-SNAPSHOT
+      - name: Docker :push master
+        run: docker push robertoman/sproxy:latest
         if: github.ref == 'refs/heads/master'
 
