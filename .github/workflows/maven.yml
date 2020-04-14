@@ -2,16 +2,40 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ develop ]
+    branches:
+      - master
+      - develop
+  pull_request:
+    branches:
+      - master
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - run: 'echo "Current ref is: ${{github.ref}}"'
       - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
       - name: Set up JDK 11
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml
+      - name: Maven :build
+        run: mvn -B -U clean package --file pom.xml
+      - name: Docker :login
+        env:
+          USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
+        run: docker login -u "$USERNAME" -p "$PASSWORD" docker.io
+      - name: Docker :build
+        run: mvn docker:build
+      - name: Docker :push versioned
+        run: docker push robertoman/sproxy:$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+      - name: Docker :push latest
+        run: docker push robertoman/sproxy:latest
+        if: github.ref == 'refs/heads/master'
+

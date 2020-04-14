@@ -6,7 +6,7 @@
 This project demonstrates the power of the [Spring Framework](https://pivotal.io/spring-app-framework) and how
 immediate it can be to manage complex infrastructures with the help of [Docker](https://www.docker.com/).  
 
----
+--- 
 ###### What is Sproxy
 
 Sproxy is a real proxy, it captures the requests (supported by the Spring framework) and forwards them to the requested url:  
