@@ -32,6 +32,6 @@ jobs:
         run: docker push robertoman/sproxy:0.0.2-SNAPSHOT
         if: github.ref == 'refs/heads/develop'
       - name: Docker :push maset
-          run: docker push robertoman/sproxy:0.0.2-SNAPSHOT
-          if: github.ref == 'refs/heads/master'
+        run: docker push robertoman/sproxy:0.0.2-SNAPSHOT
+        if: github.ref == 'refs/heads/master'
 
