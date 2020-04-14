@@ -1,8 +1,8 @@
 package com.robertomanfreda.sproxy.controllers;
 
 import com.robertomanfreda.sproxy.exceptions.ProxyException;
-import com.robertomanfreda.sproxy.http.Extractor;
 import com.robertomanfreda.sproxy.services.ProxyService;
+import com.robertomanfreda.sproxy.utils.Extractor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
