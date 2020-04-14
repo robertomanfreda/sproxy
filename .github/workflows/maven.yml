@@ -17,8 +17,9 @@ jobs:
         run: mvn -B package --file pom.xml
       - name: Docker :login
         env:
-          TEST: ${{ secrets.TEST }}
-        run: docker login -u robertoman -p "$TEST" docker.io
+          USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
+        run: docker login -u "$USERNAME" -p "$PASSWORD" docker.io
       - name: Docker :build
         run: docker build -t robertoman/sproxy:latest .
       - name: Docker :push
