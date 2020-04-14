@@ -21,4 +21,6 @@ jobs:
       - name: Docker build
         run: mvn docker:build
       - name: Docker push
-        run: docker push docker.pkg.github.com/robertoman/sproxy:latest
+        run: |
+          docker tag robertoman/sproxy:latest docker.pkg.github.com/robertoman/sproxy:latest
+          docker push robertoman/sproxy:latest
