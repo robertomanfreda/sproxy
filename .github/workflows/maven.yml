@@ -21,3 +21,5 @@ jobs:
         run: |
           mvn docker:build
           docker images
+          echo ""
+          docker push robertoman/sproxy:latest
