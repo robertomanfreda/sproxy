@@ -14,12 +14,8 @@ jobs:
         with:
           java-version: 11
       - name: Build with Maven
-        run: mvn -B package --file pom.xml docker:build
+        run: mvn -B package --file pom.xml
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
-      - name: Push image
-        run: |
-          IMAGE_ID="robertoman/sproxy"
-          VERSION="latest"
-          docker tag image $IMAGE_ID:$VERSION
-          docker push $IMAGE_ID:$VERSION
+      - name: Push with Maven
+          run: mvn docker:build docker:push
