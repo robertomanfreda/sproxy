@@ -36,6 +36,8 @@ jobs:
       - name: Docker :push snapshot
         run: docker push robertoman/sproxy:$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
       - name: Docker :push release
-        run: docker push robertoman/sproxy:latest
+        run: |
+          docker push robertoman/sproxy:latest
+          docker push robertoman/sproxy:$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
         if: github.ref == 'refs/heads/master'
 
