@@ -7,9 +7,17 @@ spring:
       invert: false
 
 
-# LOCAL ENVIRONMENT PROFILE CONFIGS
+
+# TUNNELING-PROXY ENVIRONMENT PROFILE CONFIGS
 ---
 spring:
-  profiles: local
-  http:
-    log-request-details: true
+  profiles: tunneling-proxy
+
+config:
+  security:
+    enabled: false
+    username: user
+    password: pass
+    http-methods:
+      - HEAD
+      - POST
