@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.net.URI;
 
-@Slf4j
 @Service
+@Slf4j
 public class ProxyService {
 
     private static final String HTTP = "http";

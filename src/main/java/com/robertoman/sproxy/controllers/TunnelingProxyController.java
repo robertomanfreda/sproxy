@@ -1,5 +1,6 @@
 package com.robertoman.sproxy.controllers;
 
+import com.robertoman.sproxy.annotations.Authorized;
 import com.robertoman.sproxy.exceptions.ProxyException;
 import com.robertoman.sproxy.services.ProxyService;
 import com.robertoman.sproxy.utils.Extractor;
@@ -37,11 +38,11 @@ import java.util.stream.Stream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-@Slf4j
-@RestController
 @RequestMapping("/**")
 @RequiredArgsConstructor
-public class ProxyController {
+@RestController
+@Slf4j
+public class TunnelingProxyController {
 
     private final ProxyService proxyService;
     private final HttpServletRequest httpServletRequest;
@@ -58,6 +59,7 @@ public class ProxyController {
      * @throws ProxyException // TODO ProxyException in HEAD
      * @throws IOException    // TODO IOException in HEAD
      */
+    @Authorized
     @RequestMapping(method = RequestMethod.HEAD)
     public ResponseEntity<?> head() throws ProxyException, IOException {
         HttpEntity<?> requestEntity = makeRequestEntity();
@@ -77,6 +79,7 @@ public class ProxyController {
      * @throws ProxyException // TODO ProxyException in GET
      * @throws IOException    // TODO IOException in GET
      */
+    @Authorized
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.ALL_VALUE)
     public ResponseEntity<?> get() throws ProxyException, IOException {
         HttpEntity<?> requestEntity = makeRequestEntity();
@@ -96,6 +99,7 @@ public class ProxyController {
      * @throws ProxyException // TODO ProxyException in POST
      * @throws IOException    // TODO IOException in POST
      */
+    @Authorized
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.ALL_VALUE, produces = MediaType.ALL_VALUE)
     public ResponseEntity<?> post() throws ProxyException, IOException, ServletException {
         HttpEntity<?> requestEntity = makeRequestEntity();

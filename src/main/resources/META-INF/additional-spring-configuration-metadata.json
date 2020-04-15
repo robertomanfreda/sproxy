@@ -1,0 +1,23 @@
+{
+  "properties": [
+    {
+      "name": "config.security.enabled",
+      "type": "java.lang.String",
+      "description": "Description for config.security.enabled."
+    },
+    {
+      "name": "config.security.username",
+      "type": "java.lang.String",
+      "description": "Description for config.security.username."
+    },
+    {
+      "name": "config.security.password",
+      "type": "java.lang.String",
+      "description": "Description for config.security.password."
+    },
+    {
+      "name": "config.security.http-methods",
+      "type": "java.lang.String",
+      "description": "Description for config.security.http-methods."
+    }
+  ] }
