@@ -33,9 +33,9 @@ jobs:
         run: docker login -u "$USERNAME" -p "$PASSWORD" docker.io
       - name: Docker :build
         run: mvn docker:build
-      - name: Docker :push versioned
+      - name: Docker :push snapshot
         run: docker push robertoman/sproxy:$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-      - name: Docker :push latest
+      - name: Docker :push release
         run: docker push robertoman/sproxy:latest
         if: github.ref == 'refs/heads/master'
 
