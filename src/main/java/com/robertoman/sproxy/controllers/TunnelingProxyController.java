@@ -161,6 +161,7 @@ public class TunnelingProxyController {
                 responseHeaders.add(header.getName(), header.getValue())
         );
 
+        responseHeaders.replace("Access-Control-Allow-Origin", List.of("*"));
         // Populating response body (some response has no response body so we return an empty string)
         if (null != httpResponse.getEntity() && null != httpResponse.getEntity().getContent()) {
             return new ResponseEntity<>(
