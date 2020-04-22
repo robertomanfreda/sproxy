@@ -19,5 +19,4 @@ config:
     username: user
     password: pass
     http-methods:
-      - HEAD
-      - POST
+      - GET
