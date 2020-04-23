@@ -6,9 +6,13 @@ spring:
     image:
       invert: false
 
+logging:
+  level:
+    root: info
+    com.robertoman: debug
 
 
-# TUNNELING-PROXY ENVIRONMENT PROFILE CONFIGS
+# TUNNELING-PROXY ENVIRONMENT PROFILE
 ---
 spring:
   profiles: tunneling-proxy
@@ -16,7 +20,12 @@ spring:
 config:
   security:
     enabled: false
-    username: user
-    password: pass
-    http-methods:
-      - GET
+    username: username
+    password: password
+    # The POST method is required in order to complete the login process. If not specified it will be automatically added by SProxy.
+    methods: "POST,HEAD,GET"
+  cors:
+    enabled: true
+    rules: >
+      <PATTERN>(https?://)?cdn-static.sisal.it/documents/10903/46124/term_cond_13_12_2016.pdf/3abdb748-0599-4a0c-8fd9-89c491566b29</PATTERN><VALUE>*</VALUE>,
+      <PATTERN>(https?://)?postman-echo.com/*</PATTERN><VALUE>*</VALUE>

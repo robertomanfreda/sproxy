@@ -1,27 +1,28 @@
 package com.robertoman.sproxy.services;
 
 import com.robertoman.sproxy.exceptions.ProxyException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.impl.client.HttpClients;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URI;
 
+@RequiredArgsConstructor
 @Service
 @Slf4j
 public class ProxyService {
 
     private static final String HTTP = "http";
     private static final String HTTPS = "https";
+    private final HttpClient httpClient;
 
-    private final HttpClient httpClient = HttpClients.createDefault();
-
-    public <T extends HttpRequestBase> HttpResponse doProxy(HttpEntity<?> request, T httpRequest) throws ProxyException {
+    public <T extends HttpRequestBase> HttpResponse doProxy(HttpEntity<?> request, T httpRequest)
+            throws ProxyException {
 
         if (!request.getHeaders().isEmpty()) {
             setHeaders(httpRequest, request);
