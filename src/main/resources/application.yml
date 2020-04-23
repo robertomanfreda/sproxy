@@ -27,5 +27,5 @@ config:
   cors:
     enabled: true
     rules: >
-      <PATTERN>(https?://)?cdn-static.sisal.it/documents/10903/46124/term_cond_13_12_2016.pdf/3abdb748-0599-4a0c-8fd9-89c491566b29</PATTERN><VALUE>*</VALUE>,
-      <PATTERN>(https?://)?postman-echo.com/*</PATTERN><VALUE>*</VALUE>
+      <PATTERN>(https?://)?postman-echo.com/.*+</PATTERN><VALUE>*</VALUE>,
+      <PATTERN>(https?://)?www.google.com/.*+</PATTERN><VALUE>*</VALUE>
