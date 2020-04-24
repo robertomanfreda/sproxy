@@ -84,7 +84,7 @@ public class FilteringHandler {
 
         if (match) {
             log.debug("OK, the requested url [{}] matches the filter rule [{}]", requestedUrl, matchedRule);
-            log.debug("Processing request...");
+            log.debug("All pre-execution configuration was executed. Processing request...");
         } else {
             log.warn("The requested url [{}}] doesn't match any filter rule.\n Stopping now...", requestedUrl);
             throw new IllegalUrlException("The requested url [" + requestedUrl + "] doesn't match any filter rule.");
