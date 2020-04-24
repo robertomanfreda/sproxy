@@ -22,6 +22,7 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.*;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,9 +40,9 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.robertoman.sproxy.utils.Constants.INDEX_HTML;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-@RequestMapping("/**")
 @RequiredArgsConstructor
 @RestController
 @Slf4j
@@ -50,6 +51,15 @@ public class SproxyController {
     private final ProxyService proxyService;
     private final HttpServletRequest httpServletRequest;
     private final CorsService corsService;
+
+    @GetMapping({"", "/"})
+    public String index() {
+        return INDEX_HTML;
+    }
+
+    @GetMapping("/favicon.ico")
+    public void noFavicon() {
+    }
 
     /**
      * Request has body                 No
@@ -66,7 +76,7 @@ public class SproxyController {
     @Authorized
     @Filtered
     @Logging
-    @RequestMapping(method = RequestMethod.HEAD)
+    @RequestMapping(method = RequestMethod.HEAD, value = "/**")
     public ResponseEntity<?> head() throws ProxyException, IOException {
         HttpEntity<?> requestEntity = makeRequestEntity();
         HttpHead httpRequest = new HttpHead(Extractor.extractEntityUrl(httpServletRequest));
@@ -88,7 +98,7 @@ public class SproxyController {
     @Authorized
     @Filtered
     @Logging
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.ALL_VALUE)
+    @RequestMapping(method = RequestMethod.GET, value = "/**", produces = MediaType.ALL_VALUE)
     public ResponseEntity<?> get() throws ProxyException, IOException {
         HttpEntity<?> requestEntity = makeRequestEntity();
         HttpGet httpRequest = new HttpGet(Extractor.extractEntityUrl(httpServletRequest));
@@ -110,7 +120,9 @@ public class SproxyController {
     @Authorized
     @Filtered
     @Logging
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.ALL_VALUE, produces = MediaType.ALL_VALUE)
+    @RequestMapping(method = RequestMethod.POST, value = "/**", consumes = MediaType.ALL_VALUE,
+            produces = MediaType.ALL_VALUE
+    )
     public ResponseEntity<?> post() throws ProxyException, IOException, ServletException {
         HttpEntity<?> requestEntity = makeRequestEntity();
         HttpPost httpRequest = new HttpPost(Extractor.extractEntityUrl(httpServletRequest));
