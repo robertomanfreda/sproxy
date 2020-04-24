@@ -1,7 +1,10 @@
 package com.robertoman.sproxy.controllers;
 
 import com.robertoman.sproxy.annotations.Authorized;
+import com.robertoman.sproxy.annotations.Filtered;
+import com.robertoman.sproxy.annotations.Logging;
 import com.robertoman.sproxy.exceptions.ProxyException;
+import com.robertoman.sproxy.services.CorsService;
 import com.robertoman.sproxy.services.ProxyService;
 import com.robertoman.sproxy.utils.Extractor;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +19,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.util.EntityUtils;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.*;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,10 +45,11 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @RequiredArgsConstructor
 @RestController
 @Slf4j
-public class TunnelingProxyController {
+public class SproxyController {
 
     private final ProxyService proxyService;
     private final HttpServletRequest httpServletRequest;
+    private final CorsService corsService;
 
     /**
      * Request has body                 No
@@ -60,6 +64,8 @@ public class TunnelingProxyController {
      * @throws IOException    // TODO IOException in HEAD
      */
     @Authorized
+    @Filtered
+    @Logging
     @RequestMapping(method = RequestMethod.HEAD)
     public ResponseEntity<?> head() throws ProxyException, IOException {
         HttpEntity<?> requestEntity = makeRequestEntity();
@@ -80,6 +86,8 @@ public class TunnelingProxyController {
      * @throws IOException    // TODO IOException in GET
      */
     @Authorized
+    @Filtered
+    @Logging
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.ALL_VALUE)
     public ResponseEntity<?> get() throws ProxyException, IOException {
         HttpEntity<?> requestEntity = makeRequestEntity();
@@ -100,6 +108,8 @@ public class TunnelingProxyController {
      * @throws IOException    // TODO IOException in POST
      */
     @Authorized
+    @Filtered
+    @Logging
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.ALL_VALUE, produces = MediaType.ALL_VALUE)
     public ResponseEntity<?> post() throws ProxyException, IOException, ServletException {
         HttpEntity<?> requestEntity = makeRequestEntity();
@@ -155,20 +165,30 @@ public class TunnelingProxyController {
     }
 
     private ResponseEntity<?> makeResponseEntity(HttpResponse httpResponse) throws IOException {
-        // Populating response body (some response has no response body so we return an empty string)
-        String responseBody = null != httpResponse.getEntity() ? EntityUtils.toString(httpResponse.getEntity()) : "";
-
         // Populating response headers
         MultiValueMap<String, String> responseHeaders = new HttpHeaders();
         Stream.of(httpResponse.getAllHeaders()).forEach(header ->
                 responseHeaders.add(header.getName(), header.getValue())
         );
 
-        return new ResponseEntity<>(
-                responseBody,
-                responseHeaders,
-                Objects.requireNonNull(HttpStatus.resolve(httpResponse.getStatusLine().getStatusCode()))
-        );
+        // Tuning CORS header
+        corsService.addCorsHeader(Extractor.extractEntityUrl(httpServletRequest), responseHeaders);
+
+        // Populating response body (some response has no response body so we return an empty string)
+        if (null != httpResponse.getEntity() && null != httpResponse.getEntity().getContent()) {
+            return new ResponseEntity<>(
+                    new InputStreamResource(httpResponse.getEntity().getContent()),
+                    responseHeaders,
+                    Objects.requireNonNull(HttpStatus.resolve(httpResponse.getStatusLine().getStatusCode()))
+            );
+        } else {
+            return new ResponseEntity<>(
+                    "",
+                    responseHeaders,
+                    Objects.requireNonNull(HttpStatus.resolve(httpResponse.getStatusLine().getStatusCode()))
+            );
+        }
+
     }
 
 }

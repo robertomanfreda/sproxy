@@ -9,6 +9,7 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +18,7 @@ import java.util.Optional;
 @Aspect
 @Component
 @ConditionalOnExpression("${config.security.enabled:true}")
+@Order(1)
 @Slf4j
 public class AuthorizationHandler {
 
@@ -42,4 +44,5 @@ public class AuthorizationHandler {
     public void setHttpServletRequest(HttpServletRequest httpServletRequest) {
         this.httpServletRequest = httpServletRequest;
     }
+
 }
