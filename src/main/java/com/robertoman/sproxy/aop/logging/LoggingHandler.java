@@ -3,17 +3,18 @@ package com.robertoman.sproxy.aop.logging;
 import com.robertoman.sproxy.utils.Extractor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 
 @Aspect
 @Component
+@Order(0)
 @Slf4j
 public class LoggingHandler {
 
@@ -31,8 +32,7 @@ public class LoggingHandler {
         log.debug("Received [{}] request. Using [{}] protocol",
                 httpServletRequest.getMethod(), httpServletRequest.getProtocol()
         );
-        log.debug("Requested URL is [{}]", httpServletRequest);
-        log.debug("The requested URI is [{}]", httpServletRequest.getRequestURL());
+        log.debug("The requested URL is [{}]", httpServletRequest.getRequestURL());
         log.debug("The requested URI is [{}]", Extractor.extractEntityUrl(httpServletRequest));
         log.debug("The received HTTP headers are [{}]", Extractor.extractHttpHeaders(httpServletRequest).toString());
         log.debug("The received HTTP query parameters are [{}]",
@@ -41,17 +41,16 @@ public class LoggingHandler {
         log.debug("The received HTTP body parameters are [{}]",
                 Extractor.extractFormParameters(httpServletRequest).toString()
         );
-
-        log.debug("Processing request...");
     }
 
-    @After(value = "annotatedMethods()")
+    /*@After(value = "annotatedMethods()")
     public void logAfter(JoinPoint jp) {
         log.debug("Request has been processed.");
-    }
+    }*/
 
     @Autowired
     public void setHttpServletRequest(HttpServletRequest httpServletRequest) {
         this.httpServletRequest = httpServletRequest;
     }
+
 }

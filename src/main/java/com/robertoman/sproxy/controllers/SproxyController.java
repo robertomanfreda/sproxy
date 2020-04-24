@@ -1,6 +1,7 @@
 package com.robertoman.sproxy.controllers;
 
 import com.robertoman.sproxy.annotations.Authorized;
+import com.robertoman.sproxy.annotations.Filtered;
 import com.robertoman.sproxy.annotations.Logging;
 import com.robertoman.sproxy.exceptions.ProxyException;
 import com.robertoman.sproxy.services.CorsService;
@@ -44,7 +45,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @RequiredArgsConstructor
 @RestController
 @Slf4j
-public class TunnelingProxyController {
+public class SproxyController {
 
     private final ProxyService proxyService;
     private final HttpServletRequest httpServletRequest;
@@ -63,6 +64,7 @@ public class TunnelingProxyController {
      * @throws IOException    // TODO IOException in HEAD
      */
     @Authorized
+    @Filtered
     @Logging
     @RequestMapping(method = RequestMethod.HEAD)
     public ResponseEntity<?> head() throws ProxyException, IOException {
@@ -84,6 +86,7 @@ public class TunnelingProxyController {
      * @throws IOException    // TODO IOException in GET
      */
     @Authorized
+    @Filtered
     @Logging
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.ALL_VALUE)
     public ResponseEntity<?> get() throws ProxyException, IOException {
@@ -105,6 +108,7 @@ public class TunnelingProxyController {
      * @throws IOException    // TODO IOException in POST
      */
     @Authorized
+    @Filtered
     @Logging
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.ALL_VALUE, produces = MediaType.ALL_VALUE)
     public ResponseEntity<?> post() throws ProxyException, IOException, ServletException {
@@ -167,6 +171,7 @@ public class TunnelingProxyController {
                 responseHeaders.add(header.getName(), header.getValue())
         );
 
+        // Tuning CORS header
         corsService.addCorsHeader(Extractor.extractEntityUrl(httpServletRequest), responseHeaders);
 
         // Populating response body (some response has no response body so we return an empty string)

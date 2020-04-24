@@ -20,9 +20,9 @@ import org.springframework.security.web.firewall.StrictHttpFirewall;
 import javax.annotation.PostConstruct;
 import java.util.List;
 
-@Profile("tunneling-proxy")
+@Profile("sproxy")
 @Slf4j
-public class TunnelingProxySecurityConfig {
+public class SproxySecurityConfig {
 
     @Configuration
     @EnableAutoConfiguration(exclude = SecurityAutoConfiguration.class)
@@ -35,7 +35,7 @@ public class TunnelingProxySecurityConfig {
     @EnableWebSecurity
     @Order(1)
     @Setter
-    protected static class TunnelingProxyWebSecurityConfig extends WebSecurityConfigurerAdapter {
+    protected static class SproxyWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         @Value("${config.security.username}")
         private String username;

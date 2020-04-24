@@ -34,5 +34,20 @@
       "name": "config.security.methods",
       "type": "java.lang.String",
       "description": "Description for config.security.methods."
+    },
+    {
+      "name": "config.security.keystore.zip.path",
+      "type": "java.lang.String",
+      "description": "Description for config.security.keystore.zip.path."
+    },
+    {
+      "name": "config.filtering.enabled",
+      "type": "java.lang.String",
+      "description": "Description for config.filtering.enabled."
+    },
+    {
+      "name": "config.filtering.rules",
+      "type": "java.lang.String",
+      "description": "Description for config.filtering.rules."
     }
   ] }

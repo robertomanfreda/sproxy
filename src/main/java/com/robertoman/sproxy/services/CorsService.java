@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
-import static com.robertoman.sproxy.utils.Constants.CORS_HEADER;
+import static com.robertoman.sproxy.utils.Constants.*;
 
 @Service
 @Slf4j
@@ -23,17 +23,13 @@ import static com.robertoman.sproxy.utils.Constants.CORS_HEADER;
 @Setter
 public class CorsService {
 
-    private final String REG_KEY_START = "<PATTERN>";
-    private final String REG_KEY_CLOSE = "</PATTERN>";
-    private final String REG_VALUE_START = "<VALUE>";
-    private final String REG_VALUE_CLOSE = "</VALUE>";
     private final Map<Pattern, String> corsMap = new HashMap<>();
 
     private boolean enabled;
     private List<String> rules;
 
     @PostConstruct
-    public void aVoid() {
+    public void doConfig() {
         if (!enabled) return;
 
         log.debug("STARTED CORS configuration...");

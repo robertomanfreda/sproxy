@@ -1,19 +1,20 @@
 package com.robertoman.sproxy.controllers;
 
-import com.github.robertomanfreda.java.jwt.JavaJWT;
+import com.github.robertomanfreda.java.jwt.core.JavaJWT;
 import com.robertoman.sproxy.response.LoginResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
 @ConditionalOnExpression("${config.security.enabled:true}")
 @RequestMapping("/login")
 @RequiredArgsConstructor
-//@RestController
+@RestController
 @Slf4j
 public class SecurityController {
 
