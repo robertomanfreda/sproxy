@@ -39,19 +39,19 @@ config:
     headers:
       enabled: true
       request:
-        allow-overrides: true
+        allow-overrides: false
         map:
           '[(https?://)?postman-echo.com/.*+]':
-            - 'Bar: baz'
-            - 'postman-token: tttt'
+                                              - 'Bar: baz'
+                                              - 'postman-token: tttt'
       response:
-        allow-overrides: true
+        allow-overrides: false
         map:
           '[(https?://)?postman-echo.com/.*+]':
-            - 'Access-Control-Allow-Origin: *'
-            - 'Foo: bar'
-            - 'Date: test'
-            - 'bbbbbbbb'
+                                              - 'Access-Control-Allow-Origin: *'
+                                              - 'Foo: bar'
+                                              - 'Date: test'
+                                              - 'bbbbbbbb'
 
     #########################
     ## SProxy mod SECURITY ##
