@@ -5,6 +5,7 @@ import com.robertoman.sproxy.exceptions.ProxyException;
 import com.robertoman.sproxy.mod.headers.ModHeadersConfig.ModHeaders.TypeHeader;
 import com.robertoman.sproxy.mod.headers.ModHeadersConfig.ModHeadersRequest;
 import com.robertoman.sproxy.mod.headers.ModHeadersConfig.ModHeadersResponse;
+import com.robertoman.sproxy.mod.url.annotation.ModUrl;
 import com.robertoman.sproxy.services.ProxyService;
 import com.robertoman.sproxy.utils.Extractor;
 import lombok.RequiredArgsConstructor;
@@ -75,6 +76,7 @@ public class SproxyController {
      * @throws IOException    // TODO IOException in HEAD
      */
     @Logging
+    @ModUrl
     @RequestMapping(method = RequestMethod.HEAD, value = "/**")
     public ResponseEntity<?> head() throws ProxyException, IOException {
         HttpEntity<?> requestEntity = makeRequestEntity();
@@ -95,6 +97,7 @@ public class SproxyController {
      * @throws IOException    // TODO IOException in GET
      */
     @Logging
+    @ModUrl
     @RequestMapping(method = RequestMethod.GET, value = "/**", produces = MediaType.ALL_VALUE)
     public ResponseEntity<?> get() throws ProxyException, IOException {
         HttpEntity<?> requestEntity = makeRequestEntity();
@@ -115,6 +118,7 @@ public class SproxyController {
      * @throws IOException    // TODO IOException in POST
      */
     @Logging
+    @ModUrl
     @RequestMapping(method = RequestMethod.POST, value = "/**", consumes = MediaType.ALL_VALUE,
             produces = MediaType.ALL_VALUE
     )
@@ -168,6 +172,7 @@ public class SproxyController {
     private HttpEntity<?> makeRequestEntity() {
         HttpHeaders httpHeaders = Extractor.extractHttpHeaders(httpServletRequest);
 
+        // MOD HEADERS -> request headers
         if (null != modHeadersRequest) {
             modHeadersRequest.mod(Extractor.extractEntityUrl(httpServletRequest), httpHeaders, TypeHeader.REQUEST);
         }
