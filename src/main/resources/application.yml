@@ -20,28 +20,65 @@ logging:
     name: target/${spring.application.name}
 
 
-# TUNNELING-PROXY ENVIRONMENT PROFILE
----
-spring:
-  profiles: sproxy
-
 config:
-  security:
+  #############################
+  ############ TLS ############
+  #############################
+  tls:
     enabled: false
-    username: username
-    password: password
-    # The POST method is required in order to complete the login process. If not specified it will be automatically added by SProxy.
-    methods: "POST,HEAD,GET"
-    keystore:
-      zip:
-        path: /home/roberto/keystore/keystore.zip
-  cors:
-    enabled: false
-    rules: >
-      <PATTERN>(https?://)?postman-echo.com/.*+</PATTERN><VALUE>*</VALUE>,
-      <PATTERN>(https?://)?www.google.com/.*+</PATTERN><VALUE>*</VALUE>
-  filtering:
-    enabled: false
-    rules: >
-      <PATTERN>(https?://)?postman-echo.com/.*+</PATTERN>,
-      <PATTERN>(https?://)?www.google.com/.*+</PATTERN>
+
+
+  #####################################
+  ############ SProxy MODS ############
+  #####################################
+  mod:
+    ########################
+    ## SProxy mod HEADERS ##
+    ########################
+    # From here it is possible to modify both request and response headers (regex based)
+    headers:
+      enabled: true
+      request:
+        allow-overrides: true
+        map:
+          '[(https?://)?postman-echo.com/.*+]':
+            - 'Bar: baz'
+            - 'postman-token: tttt'
+      response:
+        allow-overrides: true
+        map:
+          '[(https?://)?postman-echo.com/.*+]':
+            - 'Access-Control-Allow-Origin: *'
+            - 'Foo: bar'
+            - 'Date: test'
+            - 'bbbbbbbb'
+
+    #########################
+    ## SProxy mod SECURITY ##
+    #########################
+    # If this mod is enabled you need to login calling the /login endpoint in order to get a SProxy-Bearer
+    # to use for Bearer Authentication
+    security:
+      enabled: false
+      username: username
+      password: password
+      methods: "POST,HEAD,GET"
+      keystore:
+        zip:
+          path: /home/roberto/keystore/keystore.zip
+
+    ####################
+    ## SProxy mod URL ##
+    ####################
+    # From here it is possible to write a whitelist url that SProxy will be authorized to call (regex based)
+    url:
+      enabled: true
+      whitelist:
+        - '(https?://)?postman-echo.com/.*+'
+      blacklist:
+        - '(https?://)?www.google.com'
+
+    ####################
+    ## SProxy mod WAF ##
+    ####################
+    waf:

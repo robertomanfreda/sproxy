@@ -14,7 +14,7 @@
 
     <groupId>com.robertoman</groupId>
     <artifactId>sproxy</artifactId>
-    <version>1.2.3-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
     <name>sproxy</name>
     <description>Spring Proxy</description>
 
@@ -23,8 +23,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <org.apache.httpcomponents.version>4.5.12</org.apache.httpcomponents.version>
-        <com.github.robertomanfreda.java-jwt.version>1.2.0-RELEASE</com.github.robertomanfreda.java-jwt.version>
+        <httpcomponents.version>4.5.12</httpcomponents.version>
+        <gson.version>2.8.6</gson.version>
+        <commons-lang3.versio>3.10</commons-lang3.versio>
+        <!--<java-jwt.version>1.2.0-RELEASE</java-jwt.version>-->
+
         <lombok.version>1.18.12</lombok.version>
 
         <docker-maven-plugin.version>0.33.0</docker-maven-plugin.version>
@@ -52,25 +55,38 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>${org.apache.httpcomponents.version}</version>
+            <version>${httpcomponents.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpmime</artifactId>
-            <version>${org.apache.httpcomponents.version}</version>
+            <version>${httpcomponents.version}</version>
         </dependency>
 
         <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+
+        <!--<dependency>
             <groupId>com.github.robertomanfreda</groupId>
             <artifactId>java-jwt</artifactId>
-            <version>${com.github.robertomanfreda.java-jwt.version}</version>
-        </dependency>
+            <version>${java-jwt.version}</version>
+        </dependency>-->
 
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
