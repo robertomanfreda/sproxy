@@ -8,10 +8,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @EnableConfigurationProperties
 @Slf4j
 @SpringBootApplication
-public class SProxy {
+public class Sproxy {
 
     public static void main(String[] args) {
-        SpringApplication.run(SProxy.class, args);
+        SpringApplication.run(Sproxy.class, args);
     }
 
 }
