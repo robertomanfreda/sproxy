@@ -2,6 +2,8 @@ package com.robertoman.sproxy.controllers;
 
 import com.robertoman.sproxy.annotations.Logging;
 import com.robertoman.sproxy.exceptions.ProxyException;
+import com.robertoman.sproxy.mod.headers.ModHeadersConfig.ModHeaders.TypeHeader;
+import com.robertoman.sproxy.mod.headers.ModHeadersConfig.ModHeadersRequest;
 import com.robertoman.sproxy.mod.headers.ModHeadersConfig.ModHeadersResponse;
 import com.robertoman.sproxy.services.ProxyService;
 import com.robertoman.sproxy.utils.Extractor;
@@ -48,6 +50,7 @@ public class SproxyController {
 
     private final ProxyService proxyService;
     private final HttpServletRequest httpServletRequest;
+    private final ModHeadersRequest modHeadersRequest;
     private final ModHeadersResponse modHeadersResponse;
 
     @GetMapping({"", "/"})
@@ -164,6 +167,11 @@ public class SproxyController {
 
     private HttpEntity<?> makeRequestEntity() {
         HttpHeaders httpHeaders = Extractor.extractHttpHeaders(httpServletRequest);
+
+        if (null != modHeadersRequest) {
+            modHeadersRequest.mod(Extractor.extractEntityUrl(httpServletRequest), httpHeaders, TypeHeader.REQUEST);
+        }
+
         Map<String, String> urlParameters = Extractor.extractQueryParameters(httpServletRequest);
         return new HttpEntity<>(urlParameters, httpHeaders);
     }
@@ -175,11 +183,12 @@ public class SproxyController {
                 responseHeaders.add(header.getName(), header.getValue())
         );
 
+        // MOD HEADERS -> response headers
         if (null != modHeadersResponse) {
-            modHeadersResponse.addHeaders(Extractor.extractEntityUrl(httpServletRequest), responseHeaders);
+            modHeadersResponse.mod(
+                    Extractor.extractEntityUrl(httpServletRequest), responseHeaders, TypeHeader.RESPONSE
+            );
         }
-        // Tuning CORS header
-        //corsService.addCorsHeader(Extractor.extractEntityUrl(httpServletRequest), responseHeaders);
 
         // Populating response body (some response has no response body so we return an empty string)
         if (null != httpResponse.getEntity() && null != httpResponse.getEntity().getContent()) {

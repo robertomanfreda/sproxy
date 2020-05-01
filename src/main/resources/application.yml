@@ -39,9 +39,13 @@ config:
     headers:
       enabled: true
       request:
-        allow-overrides: false
+        allow-overrides: true
+        map:
+          '[(https?://)?postman-echo.com/.*+]':
+            - 'Bar: baz'
+            - 'postman-token: tttt'
       response:
-        allow-overrides: false
+        allow-overrides: true
         map:
           '[(https?://)?postman-echo.com/.*+]':
             - 'Access-Control-Allow-Origin: *'
