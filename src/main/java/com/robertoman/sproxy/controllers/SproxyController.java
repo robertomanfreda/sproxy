@@ -1,10 +1,8 @@
 package com.robertoman.sproxy.controllers;
 
-import com.robertoman.sproxy.annotations.Authorized;
-import com.robertoman.sproxy.annotations.Filtered;
 import com.robertoman.sproxy.annotations.Logging;
 import com.robertoman.sproxy.exceptions.ProxyException;
-import com.robertoman.sproxy.services.CorsService;
+import com.robertoman.sproxy.mod.headers.ModHeadersConfig.ModHeadersResponse;
 import com.robertoman.sproxy.services.ProxyService;
 import com.robertoman.sproxy.utils.Extractor;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +48,7 @@ public class SproxyController {
 
     private final ProxyService proxyService;
     private final HttpServletRequest httpServletRequest;
-    private final CorsService corsService;
+    private final ModHeadersResponse modHeadersResponse;
 
     @GetMapping({"", "/"})
     public String index() {
@@ -73,8 +71,6 @@ public class SproxyController {
      * @throws ProxyException // TODO ProxyException in HEAD
      * @throws IOException    // TODO IOException in HEAD
      */
-    @Authorized
-    @Filtered
     @Logging
     @RequestMapping(method = RequestMethod.HEAD, value = "/**")
     public ResponseEntity<?> head() throws ProxyException, IOException {
@@ -95,8 +91,6 @@ public class SproxyController {
      * @throws ProxyException // TODO ProxyException in GET
      * @throws IOException    // TODO IOException in GET
      */
-    @Authorized
-    @Filtered
     @Logging
     @RequestMapping(method = RequestMethod.GET, value = "/**", produces = MediaType.ALL_VALUE)
     public ResponseEntity<?> get() throws ProxyException, IOException {
@@ -117,8 +111,6 @@ public class SproxyController {
      * @throws ProxyException // TODO ProxyException in POST
      * @throws IOException    // TODO IOException in POST
      */
-    @Authorized
-    @Filtered
     @Logging
     @RequestMapping(method = RequestMethod.POST, value = "/**", consumes = MediaType.ALL_VALUE,
             produces = MediaType.ALL_VALUE
@@ -183,8 +175,11 @@ public class SproxyController {
                 responseHeaders.add(header.getName(), header.getValue())
         );
 
+        if (null != modHeadersResponse) {
+            modHeadersResponse.addHeaders(Extractor.extractEntityUrl(httpServletRequest), responseHeaders);
+        }
         // Tuning CORS header
-        corsService.addCorsHeader(Extractor.extractEntityUrl(httpServletRequest), responseHeaders);
+        //corsService.addCorsHeader(Extractor.extractEntityUrl(httpServletRequest), responseHeaders);
 
         // Populating response body (some response has no response body so we return an empty string)
         if (null != httpResponse.getEntity() && null != httpResponse.getEntity().getContent()) {
