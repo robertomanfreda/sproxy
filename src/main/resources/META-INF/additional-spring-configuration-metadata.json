@@ -14,5 +14,20 @@
       "name": "config.mod.headers.response.allow-overrides",
       "type": "java.lang.String",
       "description": "Description for config.mod.headers.response.allow-overrides."
+    },
+    {
+      "name": "config.mod.url.enabled",
+      "type": "java.lang.String",
+      "description": "Description for config.mod.url.enabled."
+    },
+    {
+      "name": "config.mod.url.blacklist",
+      "type": "java.lang.String",
+      "description": "Description for config.mod.url.blacklist."
+    },
+    {
+      "name": "config.mod.url.whitelist",
+      "type": "java.lang.String",
+      "description": "Description for config.mod.url.whitelist."
     }
   ] }

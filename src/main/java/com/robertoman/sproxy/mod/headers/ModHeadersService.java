@@ -29,6 +29,5 @@ public class ModHeadersService {
         log.debug("Configuring Mod headers response...");
         log.debug("modHeadersResponse -> {}", modHeadersResponse.toString());
         log.debug("Completed Mod headers response configuration.");
-        log.debug("---------------------------------");
     }
 }

@@ -72,14 +72,11 @@ config:
     ####################
     # From here it is possible to write a whitelist url that SProxy will be authorized to call (regex based)
     url:
-      filtering:
-        whitelist:
-          enabled: false
-          urls:
-            - <URL>(https?://)?postman-echo.com/.*+</URL>
-            - <URL>(https?://)?www.google.com/.*+</URL>
-        blacklist:
-          enabled: false
+      enabled: true
+      whitelist:
+        - '(https?://)?postman-echo.com/.*+'
+      blacklist:
+        - '(https?://)?www.google.com'
 
     ####################
     ## SProxy mod WAF ##
