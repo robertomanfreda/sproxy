@@ -1,53 +1,18 @@
 {
   "properties": [
     {
-      "name": "config.security.enabled",
+      "name": "config.mod.headers.enabled",
       "type": "java.lang.String",
-      "description": "Description for config.security.enabled."
+      "description": "Description for config.mod.headers.enabled."
     },
     {
-      "name": "config.security.username",
+      "name": "config.mod.headers.request.allow-overrides",
       "type": "java.lang.String",
-      "description": "Description for config.security.username."
+      "description": "Description for config.mod.headers.request.allow-overrides."
     },
     {
-      "name": "config.security.password",
+      "name": "config.mod.headers.response.allow-overrides",
       "type": "java.lang.String",
-      "description": "Description for config.security.password."
-    },
-    {
-      "name": "config.cors.enabled",
-      "type": "java.lang.String",
-      "description": "Description for config.cors.enabled."
-    },
-    {
-      "name": "config.cors.value",
-      "type": "java.lang.String",
-      "description": "Description for config.cors.value."
-    },
-    {
-      "name": "config.cors.rules",
-      "type": "java.lang.String",
-      "description": "Description for config.cors.rules."
-    },
-    {
-      "name": "config.security.methods",
-      "type": "java.lang.String",
-      "description": "Description for config.security.methods."
-    },
-    {
-      "name": "config.security.keystore.zip.path",
-      "type": "java.lang.String",
-      "description": "Description for config.security.keystore.zip.path."
-    },
-    {
-      "name": "config.filtering.enabled",
-      "type": "java.lang.String",
-      "description": "Description for config.filtering.enabled."
-    },
-    {
-      "name": "config.filtering.rules",
-      "type": "java.lang.String",
-      "description": "Description for config.filtering.rules."
+      "description": "Description for config.mod.headers.response.allow-overrides."
     }
   ] }
