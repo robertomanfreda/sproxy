@@ -11,13 +11,9 @@ import org.springframework.core.io.Resource;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public class Properties {
+import static com.robertoman.sproxy.utils.ANSIColors.*;
 
-    private static final String ANSI_BLUE = "\u001B[34m";
-    private static final String ANSI_GREEN = "\u001B[32m";
-    private static final String ANSI_YELLOW = "\u001B[33m";
-    private static final String ANSI_RED = "\u001B[31m";
-    private static final String ANSI_RESET = "\u001B[0m";
+public class Properties {
 
     public static java.util.Properties loadProperties() throws IOException {
         java.util.Properties properties = new java.util.Properties();

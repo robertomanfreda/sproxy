@@ -7,11 +7,18 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import java.io.IOException;
 import java.util.Properties;
 
+import static com.robertoman.sproxy.utils.ANSIColors.*;
+
 @EnableConfigurationProperties
 @SpringBootApplication
 public class Sproxy {
 
     public static void main(String[] args) throws IOException {
+        System.out.println(ANSI_GREEN + "+----  +---+  +---+  +---+  *   *  \\   /" + ANSI_RESET);
+        System.out.println(ANSI_GREEN +"|      |   |  |   |  |   |   \\ /    \\ /" + ANSI_RESET);
+        System.out.println(ANSI_WHITE + "+---+  |---+  |---+  |   |    *      |" + ANSI_RESET);
+        System.out.println(ANSI_RED +"    |  |      | \\    |   |   / \\     |" + ANSI_RESET);
+        System.out.println(ANSI_RED + "----+  |      |  \\   +---+  *   *    |" + ANSI_RESET);
         SpringApplication application = new SpringApplication(Sproxy.class);
 
         Properties properties = com.robertoman.sproxy.utils.Properties.loadProperties();
