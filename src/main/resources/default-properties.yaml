@@ -7,7 +7,7 @@ logging:
 
 config:
   #############################
-  ############ TLS ############
+  ############ TLS ############ --> THIS FEATURE IS STILL NOT AVAILABLE
   #############################
   tls:
     enabled: false
