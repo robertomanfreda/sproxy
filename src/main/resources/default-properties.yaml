@@ -1,6 +1,5 @@
 logging:
   level:
-    root: info
     com.robertoman.sproxy: debug
   file:
     name: target/${spring.application.name}
@@ -22,26 +21,22 @@ config:
     ########################
     # From here it is possible to modify both request and response headers (regex based)
     headers:
-      enabled: true
+      enabled: false
       request:
         allow-overrides: false
         map:
-          # Values here are: Map<String, List<String>>. Include your urls like this -> '[REGEX]'
+          # example: (please note -> the indentation is important, here's we are declaring a Map<String, List<String>>)
           '[(https?://)?postman-echo.com/.*+]':
-                                              - 'Bar: baz'
-                                              - 'postman-token: tttt'
+                                              - 'Foo: bar'
       response:
         allow-overrides: false
         map:
-          # Values here are: Map<String, List<String>>. Include your urls like this -> '[REGEX]'
+          # example: (please note -> the indentation is important, here's we are declaring a Map<String, List<String>>)
           '[(https?://)?postman-echo.com/.*+]':
                                               - 'Access-Control-Allow-Origin: *'
-                                              - 'Foo: bar'
-                                              - 'Date: test'
-                                              - 'bbbbbbbb'
 
     #########################
-    ## SProxy mod SECURITY ##
+    ## SProxy mod SECURITY ## --> THIS MOD IS STILL NOT AVAILABLE
     #########################
     # If this mod is enabled you need to login calling the /login endpoint in order to get a SProxy-Bearer
     # to use for Bearer Authentication
@@ -66,10 +61,10 @@ config:
         - '(https?://)?www.google.com'
 
     ####################
-    ## SProxy mod WAF ##
+    ## SProxy mod WAF ##  --> THIS MOD IS IN AN EXPERIMENTAL STATE
     ####################
     waf:
-      enabled: false
+      enabled: true
       allows:
         backslash: false
         url-encoded-double-slash: true
