@@ -16,18 +16,58 @@
       "description": "Description for config.mod.headers.response.allow-overrides."
     },
     {
+      "name": "config.mod.waf.enabled",
+      "type": "java.lang.String",
+      "description": "Description for config.mod.waf.enabled."
+    },
+    {
+      "name": "config.mod.waf.allows.backslash",
+      "type": "java.lang.String",
+      "description": "Description for config.mod.waf.allows.backslash."
+    },
+    {
+      "name": "config.mod.waf.allows.url-encoded-double-slash",
+      "type": "java.lang.String",
+      "description": "Description for config.mod.waf.allows.url-encoded-double-slash."
+    },
+    {
+      "name": "config.mod.waf.allows.url-uncoded-percent",
+      "type": "java.lang.String",
+      "description": "Description for config.mod.waf.allows.url-uncoded-percent."
+    },
+    {
+      "name": "config.mod.waf.allows.url-encoded-period",
+      "type": "java.lang.String",
+      "description": "Description for config.mod.waf.allows.url-encoded-period."
+    },
+    {
+      "name": "config.mod.waf.allows.url-encoded-slash",
+      "type": "java.lang.String",
+      "description": "Description for config.mod.waf.allows.url-encoded-slash."
+    },
+    {
+      "name": "config.mod.waf.allows.semicolon",
+      "type": "java.lang.String",
+      "description": "Description for config.mod.waf.allows.semicolon."
+    },
+    {
+      "name": "config.mod.waf.allows.http-methods",
+      "type": "java.lang.String",
+      "description": "Description for config.mod.waf.allows.http-methods."
+    },
+    {
       "name": "config.mod.url.enabled",
       "type": "java.lang.String",
       "description": "Description for config.mod.url.enabled."
     },
     {
-      "name": "config.mod.url.blacklist",
-      "type": "java.lang.String",
-      "description": "Description for config.mod.url.blacklist."
-    },
-    {
       "name": "config.mod.url.whitelist",
       "type": "java.lang.String",
       "description": "Description for config.mod.url.whitelist."
+    },
+    {
+      "name": "config.mod.url.blacklist",
+      "type": "java.lang.String",
+      "description": "Description for config.mod.url.blacklist."
     }
   ] }

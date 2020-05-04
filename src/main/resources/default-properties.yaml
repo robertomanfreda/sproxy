@@ -1,32 +1,16 @@
-server:
-  port: 8080
-
-spring:
-  application:
-    name: sproxy
-  output:
-    ansi:
-      enabled: ALWAYS
-  banner:
-    image:
-      invert: false
-
 logging:
   level:
-    root: info
     com.robertoman.sproxy: debug
-    com.github.robertomanfreda.java.jwt: debug
   file:
     name: target/${spring.application.name}
 
 
 config:
   #############################
-  ############ TLS ############
+  ############ TLS ############ --> THIS FEATURE IS STILL NOT AVAILABLE
   #############################
   tls:
     enabled: false
-
 
   #####################################
   ############ SProxy MODS ############
@@ -37,24 +21,22 @@ config:
     ########################
     # From here it is possible to modify both request and response headers (regex based)
     headers:
-      enabled: true
+      enabled: false
       request:
         allow-overrides: false
         map:
+          # example: (please note -> the indentation is important, here's we are declaring a Map<String, List<String>>)
           '[(https?://)?postman-echo.com/.*+]':
-                                              - 'Bar: baz'
-                                              - 'postman-token: tttt'
+                                              - 'Foo: bar'
       response:
         allow-overrides: false
         map:
+          # example: (please note -> the indentation is important, here's we are declaring a Map<String, List<String>>)
           '[(https?://)?postman-echo.com/.*+]':
                                               - 'Access-Control-Allow-Origin: *'
-                                              - 'Foo: bar'
-                                              - 'Date: test'
-                                              - 'bbbbbbbb'
 
     #########################
-    ## SProxy mod SECURITY ##
+    ## SProxy mod SECURITY ## --> THIS MOD IS STILL NOT AVAILABLE
     #########################
     # If this mod is enabled you need to login calling the /login endpoint in order to get a SProxy-Bearer
     # to use for Bearer Authentication
@@ -72,13 +54,24 @@ config:
     ####################
     # From here it is possible to write a whitelist url that SProxy will be authorized to call (regex based)
     url:
-      enabled: true
+      enabled: false
       whitelist:
         - '(https?://)?postman-echo.com/.*+'
       blacklist:
         - '(https?://)?www.google.com'
 
     ####################
-    ## SProxy mod WAF ##
+    ## SProxy mod WAF ##  --> THIS MOD IS IN AN EXPERIMENTAL STATE
     ####################
     waf:
+      enabled: false
+      allows:
+        backslash: false
+        url-encoded-double-slash: true
+        url-uncoded-percent: false
+        url-encoded-period: false
+        url-encoded-slash: false
+        semicolon: false
+        http-methods:
+          - GET
+          - HEAD

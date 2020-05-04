@@ -6,12 +6,12 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 
+@Order(0)
 @Slf4j
 public class SproxySecurityConfig {
 
     @Configuration
     @EnableAutoConfiguration(exclude = SecurityAutoConfiguration.class)
-    @Order(0)
     protected static class DefaultWebSecurityConfig {
     }
 
