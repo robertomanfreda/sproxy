@@ -18,7 +18,7 @@ config:
     ########################
     # From here it is possible to modify both request and response headers (regex based)
     headers:
-      enabled: true
+      enabled: false
       request:
         allow-overrides: false
         map:

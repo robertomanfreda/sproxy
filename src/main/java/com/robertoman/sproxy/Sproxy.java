@@ -26,7 +26,6 @@ public class Sproxy {
         properties.setProperty("logging.level.org.springframework", "info");
         properties.setProperty("logging.file.name", "/var/log/sproxy/sproxy");
 
-        sproxyApp.setLogStartupInfo(false);
         sproxyApp.setDefaultProperties(properties);
 
         sproxyApp.run(args);
