@@ -7,21 +7,24 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import java.io.IOException;
 import java.util.Properties;
 
-import static com.robertoman.sproxy.utils.ANSIColors.*;
+import static com.robertoman.sproxy.util.ANSIColors.*;
 
 @EnableConfigurationProperties
 @SpringBootApplication
 public class Sproxy {
 
     public static void main(String[] args) throws IOException {
-        System.out.println(ANSI_GREEN + "+----  +---+  +---+  +---+  *   *  \\   /" + ANSI_RESET);
-        System.out.println(ANSI_GREEN +"|      |   |  |   |  |   |   \\ /    \\ /" + ANSI_RESET);
-        System.out.println(ANSI_WHITE + "+---+  |---+  |---+  |   |    *      |" + ANSI_RESET);
-        System.out.println(ANSI_RED +"    |  |      | \\    |   |   / \\     |" + ANSI_RESET);
-        System.out.println(ANSI_RED + "----+  |      |  \\   +---+  *   *    |" + ANSI_RESET);
+        String banner = ANSI_GREEN + "+----  +---+  +---+  +---+  *   *  \\   /" + ANSI_RESET +
+                        ANSI_GREEN + "\n|      |   |  |   |  |   |   \\ /    \\ /" + ANSI_RESET +
+                        ANSI_WHITE + "\n+---+  |---+  |---+  |   |    *      |" + ANSI_RESET +
+                        ANSI_RED + "\n    |  |      | \\    |   |   / \\     |" + ANSI_RESET +
+                        ANSI_RED + "\n----+  |      |  \\   +---+  *   *    |" + ANSI_RESET;
+
+        System.out.println(banner);
+
         SpringApplication application = new SpringApplication(Sproxy.class);
 
-        Properties properties = com.robertoman.sproxy.utils.Properties.loadProperties();
+        Properties properties = com.robertoman.sproxy.util.Properties.loadProperties();
         /*https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml?&page=99*/
         properties.setProperty("server.port", "6380");
         properties.setProperty("spring.application.name", "sproxy");

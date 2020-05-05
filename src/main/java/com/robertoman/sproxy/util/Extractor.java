@@ -1,4 +1,4 @@
-package com.robertoman.sproxy.utils;
+package com.robertoman.sproxy.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.NameValuePair;

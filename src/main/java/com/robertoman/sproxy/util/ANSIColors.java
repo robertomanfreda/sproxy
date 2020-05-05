@@ -1,4 +1,4 @@
-package com.robertoman.sproxy.utils;
+package com.robertoman.sproxy.util;
 
 public class ANSIColors {
     public static final String ANSI_RESET = "\u001B[0m";

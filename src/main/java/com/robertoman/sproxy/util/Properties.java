@@ -1,4 +1,4 @@
-package com.robertoman.sproxy.utils;
+package com.robertoman.sproxy.util;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
@@ -11,7 +11,7 @@ import org.springframework.core.io.Resource;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import static com.robertoman.sproxy.utils.ANSIColors.*;
+import static com.robertoman.sproxy.util.ANSIColors.*;
 
 public class Properties {
 
