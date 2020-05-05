@@ -1,6 +1,6 @@
-package com.robertoman.sproxy.services;
+package com.robertoman.sproxy.service;
 
-import com.robertoman.sproxy.exceptions.ProxyException;
+import com.robertoman.sproxy.exception.ProxyException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;

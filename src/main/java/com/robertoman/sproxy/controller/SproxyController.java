@@ -1,14 +1,12 @@
-package com.robertoman.sproxy.controllers;
+package com.robertoman.sproxy.controller;
 
-import com.robertoman.sproxy.annotations.Logging;
-import com.robertoman.sproxy.exceptions.ProxyException;
+import com.robertoman.sproxy.annotation.Logging;
+import com.robertoman.sproxy.annotation.ModUrl;
+import com.robertoman.sproxy.exception.ProxyException;
 import com.robertoman.sproxy.mod.headers.ModHeadersConfig.ModHeaders.TypeHeader;
-import com.robertoman.sproxy.mod.headers.ModHeadersConfig.ModHeadersRequest;
-import com.robertoman.sproxy.mod.headers.ModHeadersConfig.ModHeadersResponse;
-import com.robertoman.sproxy.mod.url.annotation.ModUrl;
-import com.robertoman.sproxy.services.ProxyService;
-import com.robertoman.sproxy.utils.Extractor;
-import lombok.RequiredArgsConstructor;
+import com.robertoman.sproxy.mod.headers.ModHeadersService;
+import com.robertoman.sproxy.service.ProxyService;
+import com.robertoman.sproxy.util.Extractor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -22,6 +20,7 @@ import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.*;
+import org.springframework.lang.Nullable;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,18 +40,23 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.robertoman.sproxy.utils.Constants.INDEX_HTML;
+import static com.robertoman.sproxy.util.Constants.INDEX_HTML;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-@RequiredArgsConstructor
 @RestController
 @Slf4j
 public class SproxyController {
 
     private final ProxyService proxyService;
     private final HttpServletRequest httpServletRequest;
-    private final ModHeadersRequest modHeadersRequest;
-    private final ModHeadersResponse modHeadersResponse;
+    private final ModHeadersService modHeadersService;
+
+    public SproxyController(ProxyService proxyService, HttpServletRequest httpServletRequest,
+                            @Nullable ModHeadersService modHeadersService) {
+        this.proxyService = proxyService;
+        this.httpServletRequest = httpServletRequest;
+        this.modHeadersService = modHeadersService;
+    }
 
     @GetMapping({"", "/"})
     public String index() {
@@ -173,8 +177,8 @@ public class SproxyController {
         HttpHeaders httpHeaders = Extractor.extractHttpHeaders(httpServletRequest);
 
         // MOD HEADERS -> request headers
-        if (null != modHeadersRequest) {
-            modHeadersRequest.mod(Extractor.extractEntityUrl(httpServletRequest), httpHeaders, TypeHeader.REQUEST);
+        if (null != modHeadersService) {
+            modHeadersService.getModHeadersRequest().mod(Extractor.extractEntityUrl(httpServletRequest), httpHeaders, TypeHeader.REQUEST);
         }
 
         Map<String, String> urlParameters = Extractor.extractQueryParameters(httpServletRequest);
@@ -189,8 +193,8 @@ public class SproxyController {
         );
 
         // MOD HEADERS -> response headers
-        if (null != modHeadersResponse) {
-            modHeadersResponse.mod(
+        if (null != modHeadersService) {
+            modHeadersService.getModHeadersResponse().mod(
                     Extractor.extractEntityUrl(httpServletRequest), responseHeaders, TypeHeader.RESPONSE
             );
         }
@@ -209,7 +213,6 @@ public class SproxyController {
                     Objects.requireNonNull(HttpStatus.resolve(httpResponse.getStatusLine().getStatusCode()))
             );
         }
-
     }
 
 }

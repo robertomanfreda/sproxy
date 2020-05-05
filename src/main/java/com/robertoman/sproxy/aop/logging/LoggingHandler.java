@@ -1,6 +1,6 @@
 package com.robertoman.sproxy.aop.logging;
 
-import com.robertoman.sproxy.utils.Extractor;
+import com.robertoman.sproxy.util.Extractor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -21,7 +21,7 @@ public class LoggingHandler {
     private final String LOGS_SEPARATOR = "---------- SProxy received a new request ----------";
     private HttpServletRequest httpServletRequest;
 
-    @Pointcut("execution(@com.robertoman.sproxy.annotations.Logging * *.*(..))")
+    @Pointcut("execution(@com.robertoman.sproxy.annotation.Logging * *.*(..))")
     public void annotatedMethods() {
     }
 

@@ -1,6 +1,7 @@
 package com.robertoman.sproxy.mod.headers;
 
 import com.robertoman.sproxy.mod.headers.ModHeadersConfig.ModHeadersRequest;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -11,6 +12,7 @@ import javax.annotation.PostConstruct;
 import static com.robertoman.sproxy.mod.headers.ModHeadersConfig.ModHeadersResponse;
 
 @ConditionalOnProperty(value = "config.mod.headers.enabled", havingValue = "true")
+@Getter
 @RequiredArgsConstructor
 @Service
 @Slf4j

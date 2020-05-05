@@ -1,4 +1,4 @@
-package com.robertoman.sproxy.utils;
+package com.robertoman.sproxy.util;
 
 public class Constants {
     public static final String CORS_HEADER = "Access-Control-Allow-Origin";

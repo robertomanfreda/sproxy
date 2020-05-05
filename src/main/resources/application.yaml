@@ -1,9 +1,6 @@
 logging:
   level:
     com.robertoman.sproxy: debug
-  file:
-    name: target/${spring.application.name}
-
 
 config:
   #############################

@@ -1,7 +1,7 @@
-package com.robertoman.sproxy.mod.url.aop;
+package com.robertoman.sproxy.mod.url;
 
-import com.robertoman.sproxy.mod.url.exception.IllegalUrlException;
-import com.robertoman.sproxy.utils.Extractor;
+import com.robertoman.sproxy.exception.IllegalUrlException;
+import com.robertoman.sproxy.util.Extractor;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -55,7 +55,7 @@ public class ModUrlAspect {
         makeList(blacklist, blackPatterns, TypeList.BLACKLIST);
     }
 
-    @Pointcut("execution(@com.robertoman.sproxy.mod.url.annotation.ModUrl * *.*(..))")
+    @Pointcut("execution(@com.robertoman.sproxy.annotation.ModUrl * *.*(..))")
     private void annotatedMethods() {
     }
 
