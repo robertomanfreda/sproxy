@@ -18,19 +18,25 @@ config:
     ########################
     # From here it is possible to modify both request and response headers (regex based)
     headers:
-      enabled: false
+      enabled: true
       request:
+        # When allow override is true every headers with the same key will be overwritten
         allow-overrides: false
         map:
           # example: (please note -> the indentation is important, here's we are declaring a Map<String, List<String>>)
-          '[(https?://)?postman-echo.com/.*+]':
-                                              - 'Foo: bar'
+          # As key we use a regex to define the url(s) to filter, as value we define a List of String
+          (https?://)?postman-echo.com/.*+:
+                                          - 'Foo: bar'
+                                          - 'Bat: baz'
+                                          - 'Another-Custom-Header: custom'
+          (https?://)?(www.)?google.(com|it)(/.*)?:
+                                                  - 'An-Header: 1'
+                                                  - 'Another-Header: 2'
+      # The same as for the request headers
       response:
         allow-overrides: false
-        map:
-          # example: (please note -> the indentation is important, here's we are declaring a Map<String, List<String>>)
-          '[(https?://)?postman-echo.com/.*+]':
-                                              - 'Access-Control-Allow-Origin: *'
+        # just use {} if you don't have any value to specify or the startup will fail
+        map: {}
 
     #########################
     ## SProxy mod SECURITY ## --> THIS MOD IS STILL NOT AVAILABLE
@@ -39,18 +45,13 @@ config:
     # to use for Bearer Authentication
     security:
       enabled: false
-      username: username
-      password: password
-      keystore:
-        zip:
-          path: /home/roberto/keystore/keystore.zip
 
     ####################
     ## SProxy mod URL ##
     ####################
     # From here it is possible to write a whitelist url that SProxy will be authorized to call (regex based)
     url:
-      enabled: false
+      enabled: true
       whitelist:
         - '(https?://)?postman-echo.com/.*+'
       blacklist:
@@ -60,7 +61,7 @@ config:
     ## SProxy mod WAF ##  --> THIS MOD IS IN AN EXPERIMENTAL STATE
     ####################
     waf:
-      enabled: false
+      enabled: true
       allows:
         backslash: false
         url-encoded-double-slash: true
@@ -68,7 +69,7 @@ config:
         url-encoded-period: false
         url-encoded-slash: false
         semicolon: false
-        host-names:
+        host-names: # can be left empty or a list of hostNames can be specified
         http-methods:
           - GET
           - HEAD

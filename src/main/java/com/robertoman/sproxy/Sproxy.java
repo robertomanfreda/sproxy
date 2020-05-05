@@ -7,8 +7,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 import java.util.Properties;
 
-import static com.robertoman.sproxy.util.ANSIColors.*;
-
 @EnableConfigurationProperties
 @Slf4j
 @SpringBootApplication
@@ -29,16 +27,5 @@ public class Sproxy {
         sproxyApp.setDefaultProperties(properties);
 
         sproxyApp.run(args);
-        printBanner();
-    }
-
-    private static void printBanner() {
-        String banner = ANSI_GREEN + "\n+----  +---+  +---+  +---+  *   *  \\   /" + ANSI_RESET +
-                ANSI_GREEN + "\n|      |   |  |   |  |   |   \\ /    \\ /" + ANSI_RESET +
-                ANSI_WHITE + "\n+---+  |---+  |---+  |   |    *      |" + ANSI_RESET +
-                ANSI_RED + "\n    |  |      | \\    |   |   / \\     |" + ANSI_RESET +
-                ANSI_RED + "\n----+  |      |  \\   +---+  *   *    |" + ANSI_RESET;
-
-        log.info(banner);
     }
 }
