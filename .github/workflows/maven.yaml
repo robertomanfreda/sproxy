@@ -31,8 +31,11 @@ jobs:
           USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
           PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
         run: docker login -u "$USERNAME" -p "$PASSWORD" docker.io
-      - name: Docker :build
+      - name: Docker :build snapshot/release
         run: docker build -t robertoman/sproxy:$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout) .
+      - name:
+        run: docker :build latest
+        if: github.ref == 'refs/heads/master'
       - name: Docker :push snapshot
         run: docker push robertoman/sproxy:$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
         if: github.ref == 'refs/heads/develop'
