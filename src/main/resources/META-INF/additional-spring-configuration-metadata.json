@@ -69,5 +69,15 @@
       "name": "config.mod.url.blacklist",
       "type": "java.lang.String",
       "description": "Description for config.mod.url.blacklist."
+    },
+    {
+      "name": "config.mod.waf.allows.host-names",
+      "type": "java.lang.String",
+      "description": "Description for config.mod.waf.allows.host-names."
+    },
+    {
+      "name": "config.tls.enabled",
+      "type": "java.lang.String",
+      "description": "Description for config.tls.enabled."
     }
   ] }

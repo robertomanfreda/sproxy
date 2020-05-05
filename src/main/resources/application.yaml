@@ -41,7 +41,6 @@ config:
       enabled: false
       username: username
       password: password
-      methods: "POST,HEAD,GET"
       keystore:
         zip:
           path: /home/roberto/keystore/keystore.zip
@@ -69,6 +68,8 @@ config:
         url-encoded-period: false
         url-encoded-slash: false
         semicolon: false
+        host-names:
         http-methods:
           - GET
           - HEAD
+          - POST
