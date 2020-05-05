@@ -64,7 +64,7 @@ config:
     ## SProxy mod WAF ##  --> THIS MOD IS IN AN EXPERIMENTAL STATE
     ####################
     waf:
-      enabled: true
+      enabled: false
       allows:
         backslash: false
         url-encoded-double-slash: true
