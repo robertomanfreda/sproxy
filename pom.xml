@@ -14,7 +14,7 @@
 
     <groupId>com.robertoman</groupId>
     <artifactId>sproxy</artifactId>
-    <version>2.0.5-SNAPSHOT</version>
+    <version>2.0.5-RELEASE</version>
     <name>sproxy</name>
     <description>Spring Proxy</description>
 
