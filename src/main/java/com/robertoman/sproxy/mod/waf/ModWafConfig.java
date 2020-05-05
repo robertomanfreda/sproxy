@@ -35,6 +35,7 @@ public class ModWafConfig extends WebSecurityConfigurerAdapter {
     private boolean urlEncodedSlash;
     private boolean semicolon;
     private List<String> httpMethods;
+    private List<String> hostNames;
 
     @Override
     public void configure(WebSecurity web) {
@@ -59,6 +60,10 @@ public class ModWafConfig extends WebSecurityConfigurerAdapter {
 
         log.debug("Allowing semicolon [{}]", semicolon);
         firewall.setAllowSemicolon(semicolon);
+
+        if (null != hostNames && hostNames.size() > 0) {
+            firewall.setAllowedHostnames((h) -> hostNames.stream().anyMatch(hn -> hn.equals(h)));
+        }
 
         firewall.setAllowedHttpMethods(httpMethods);
         log.debug("Allowed HTTP methods from configuration are [{}]", httpMethods.toString());
