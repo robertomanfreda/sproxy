@@ -79,22 +79,16 @@ Accepted names for the file are:
 - application.yml
 - application.properties
 
-Here's a complete example of configuration file:
-
-
----
-###### Sproxy and docker
-Project Sproxy is strictly connected to docker, all the development process was executed basing on it. So if you want to
-run it out of the docker context you are free to do it but you'll not find any information about configuration or other
-stuff here.
-
-Here's a minimal docker compose file (is everything you need) useful to run Sproxy:  
+Here's a complete example of configuration file:  
+**application.yaml**
 ```yaml
 logging:
   level:
     com.robertoman.sproxy: debug
 
 config:
+  show-homepage: true
+  
   mod:
     headers:
       enabled: true
@@ -136,7 +130,14 @@ config:
           - HEAD
           - POST
 ```
- 
+
+---
+###### Sproxy and docker
+Project Sproxy is strictly connected to docker, all the development process was executed basing on it. So if you want to
+run it out of the docker context you are free to do it but you'll not find any information about configuration or other
+stuff here.
+
+Here's a minimal docker compose file (is everything you need) useful to run Sproxy:   
 **docker-compose.yaml**  
 ```yaml
 version: "3.7"

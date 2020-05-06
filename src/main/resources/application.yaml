@@ -3,6 +3,8 @@ logging:
     com.robertoman.sproxy: debug
 
 config:
+  show-homepage: true
+
   #############################
   ############ TLS ############ --> THIS FEATURE IS STILL NOT AVAILABLE
   #############################
@@ -18,7 +20,7 @@ config:
     ########################
     # From here it is possible to modify both request and response headers (regex based)
     headers:
-      enabled: true
+      enabled: false
       request:
         # When allow override is true every headers with the same key will be overwritten
         allow-overrides: false
@@ -51,7 +53,7 @@ config:
     ####################
     # From here it is possible to write a whitelist url that SProxy will be authorized to call (regex based)
     url:
-      enabled: true
+      enabled: false
       whitelist:
         - '(https?://)?postman-echo.com/.*+'
       blacklist:
@@ -61,7 +63,7 @@ config:
     ## SProxy mod WAF ##  --> THIS MOD IS IN AN EXPERIMENTAL STATE
     ####################
     waf:
-      enabled: true
+      enabled: false
       allows:
         backslash: false
         url-encoded-double-slash: true
