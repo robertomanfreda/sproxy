@@ -12,11 +12,8 @@ public class HttpConfig {
 
     @Bean
     public CloseableHttpClient httpClient() {
-        return HttpClients.custom()
-                .setDefaultRequestConfig(
-                        RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build()
-                )
-                .build();
+        return HttpClients.custom().setDefaultRequestConfig(
+                RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build()
+        ).build();
     }
-
 }
