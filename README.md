@@ -168,7 +168,7 @@ stuff here.
 Here's a minimal docker compose file (is everything you need) useful to run Sproxy:   
 **docker-compose.yaml**  
 ```yaml
-version: "3.7"
+version: "3.8"
 
 services:
   sproxy:
