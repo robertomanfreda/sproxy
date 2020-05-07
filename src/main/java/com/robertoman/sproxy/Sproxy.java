@@ -16,8 +16,6 @@ public class Sproxy {
         SpringApplication sproxyApp = new SpringApplication(Sproxy.class);
 
         Properties properties = new Properties();
-        /*https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml?&page=99*/
-        properties.setProperty("server.port", "6380");
         properties.setProperty("spring.main.banner-mode", "off");
         properties.setProperty("spring.application.name", "sproxy");
         properties.setProperty("spring.output.ansi.enabled", "always");
