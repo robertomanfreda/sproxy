@@ -18,6 +18,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.*;
 import org.springframework.lang.Nullable;
@@ -51,6 +52,9 @@ public class SproxyController {
     private final HttpServletRequest httpServletRequest;
     private final ModHeadersService modHeadersService;
 
+    @Value("${config.show-homepage}")
+    private boolean showHomepage;
+
     public SproxyController(ProxyService proxyService, HttpServletRequest httpServletRequest,
                             @Nullable ModHeadersService modHeadersService) {
         this.proxyService = proxyService;
@@ -60,7 +64,8 @@ public class SproxyController {
 
     @GetMapping({"", "/"})
     public String index() {
-        return INDEX_HTML;
+        if (showHomepage) return INDEX_HTML;
+        return null;
     }
 
     @GetMapping("/favicon.ico")
