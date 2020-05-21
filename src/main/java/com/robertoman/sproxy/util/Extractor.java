@@ -15,11 +15,10 @@ import java.util.stream.Stream;
 public class Extractor {
 
     public static String extractEntityUrl(HttpServletRequest httpServletRequest) {
+        String requestURI = httpServletRequest.getRequestURI();
         String queryString = httpServletRequest.getQueryString();
 
-        StringBuilder urlBuilder = new StringBuilder(
-                httpServletRequest.getRequestURI().replaceFirst("/", "")
-        );
+        StringBuilder urlBuilder = new StringBuilder(requestURI.replaceFirst("/", ""));
 
         if (null != queryString) {
             urlBuilder.append("?");

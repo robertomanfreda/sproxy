@@ -10,7 +10,7 @@ config:
 
 eureka:
   client:
-    enabled: true
+    enabled: false
     service-url:
       # if eureka is secured
       #defaultZone: ${config.eureka-server.proto}://${config.eureka-client.username}:${config.eureka-client.password}@${config.eureka-server.base}:${config.eureka-server.port}/eureka
