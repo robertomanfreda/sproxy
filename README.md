@@ -215,11 +215,3 @@ If you don't want to provide an externalized properties file you can compile Spr
 - `mvn -U clean package; docker build -t robertoman/sproxy:custom .`
 - `docker run -d --name sproxy com.robertoman/sproxy:custom` mapping ports, config folder 
    and logs volumes as you prefer 
-
----
-######  Sproxy homepage
-![Sproxy Screenshot](./src/main/resources/screenshot/sproxy_homepage_screenshot.png)
-
----
-######  Sproxy logs
-![Sproxy Screenshot](./src/main/resources/screenshot/sproxy_startup_screenshot.png)

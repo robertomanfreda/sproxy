@@ -2,6 +2,10 @@ logging:
   level:
     com.robertoman.sproxy: debug
 
+eureka:
+  client:
+    enabled: false
+
 config:
   show-homepage: true
 
