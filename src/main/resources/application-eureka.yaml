@@ -12,13 +12,6 @@ config:
       #username: user
       #password: pass
 
-info:
-  app:
-    artifact: "@project.artifactId@"
-    name: "@project.name@"
-    version: "@project.version@"
-    java.version: "@java.version@"
-
 eureka:
   client:
     enabled: true
