@@ -9,8 +9,8 @@ config:
     port: 7000
     # if eureka is secured
     #eureka-client:
-    #username: user
-    #password: pass
+      #username: user
+      #password: pass
 
 info:
   app:
