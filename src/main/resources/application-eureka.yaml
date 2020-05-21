@@ -1,7 +1,3 @@
-spring:
-  application:
-    name: sproxy
-
 config:
   eureka-server:
     proto: http
