@@ -110,7 +110,7 @@ Here's the recommended **directory structure**
      |
      +folder--> config
      |            |
-     |            +file--> application-sproxy.yaml
+     |            +file--> application.yaml
      |            |
      |            +file--> application-eureka.yaml  #(if eureka is enabled)
      |            |
