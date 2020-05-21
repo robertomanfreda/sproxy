@@ -9,6 +9,11 @@ eureka:
     metadata-map:
       build.version: ${info.app.version}
 
+management:
+  endpoint:
+    logfile:
+      external-file: /var/log/${spring.application.name}/${spring.application.name}.log
+
 info:
   app:
     artifact: "@project.artifactId@"
