@@ -215,9 +215,10 @@ config:
 Sproxy supports eureka registration, all dependencies are provided within the jar package.   
 By default the autodiscovery is disabled.  
     
-If you need to enable the discovery client features there are 2 steps to do.   
-Create a file named `application-eureka.yaml` and place it into your config folder. 
-
+If you need to enable the discovery client features there are 2 steps to do:  
+  - Create a file named `application-eureka.yaml` and place it into your config folder. 
+  - put in this environment variable via docker-compose: `spring.profiles.active=default,eureka`
+  
 Here's an example of **application-eureka.yaml**:  
 ```yaml
 spring:
