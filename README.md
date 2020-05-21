@@ -217,7 +217,7 @@ By default the autodiscovery is disabled.
     
 If you need to enable the discovery client features there are 2 steps to do:  
   - Create a file named `application-eureka.yaml` and place it into your config folder. 
-  - Cut in this environment variable via docker-compose: `spring.profiles.active=default,eureka`
+  - Put in the environment this variable via docker-compose: `spring.profiles.active=default,eureka`
   
 Here's an example of **application-eureka.yaml**:  
 ```yaml
