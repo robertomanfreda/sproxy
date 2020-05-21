@@ -18,7 +18,7 @@ POST            | implemented
 DELETE          | not implemented
 OPTIONS         | not implemented
 PATCH           | not implemented
-PUT             | not implemented
+PUT             | implemented
 TRACE           | not implemented   
 
 ---
