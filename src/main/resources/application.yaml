@@ -1,0 +1,80 @@
+logging:
+  level:
+    com.robertoman.sproxy: debug
+
+eureka:
+  client:
+    enabled: false
+
+config:
+  show-homepage: true
+
+  feature:
+    #---------- FEATURE TLS ----------#
+    tls:
+      enabled: false
+      http-to-https: true
+      key-alias: sproxy
+      key-store-password: sproxy
+      key-store: 'classpath:sproxy.p12'
+      # Supported keystore types are: PKCS12, JKS - Preferred keystore type is: PKCS12
+      key-store-type: PKCS12
+
+  mod:
+    #---------- MOD HEADERS ----------#
+    # From here it is possible to modify both request and response headers (regex based)
+    headers:
+      enabled: false
+      request:
+        # When allow override is true every headers with the same key will be overwritten
+        allow-overrides: false
+        map:
+          # example: (please note -> the indentation is important, here's we are declaring a Map<String, List<String>>)
+          # As key we use a regex to define the url(s) to filter, as value we define a List of String
+          (https?://)?postman-echo.com/.*+:
+                                          - 'Foo: bar'
+                                          - 'Bat: baz'
+                                          - 'Another-Custom-Header: custom'
+          (https?://)?(www.)?google.(com|it)(/.*)?:
+            - 'An-Header: 1'
+            - 'Another-Header: 2'
+      # The same as for the request headers
+      response:
+        allow-overrides: false
+        # just use {} if you don't have any value to specify or the startup will fail
+        map: {}
+
+
+    #---------- MOD SECURITY ----------# --> THIS MOD IS STILL NOT AVAILABLE
+    # If this mod is enabled you need to login calling the /login endpoint in order to get a SProxy-Bearer
+    # to use for Bearer Authentication
+    security:
+      enabled: false
+
+
+    #---------- MOD URL ----------#
+    # From here it is possible to write a whitelist url that SProxy will be authorized to call (regex based)
+    url:
+      enabled: false
+      whitelist:
+        - '(https?://)?postman-echo.com/.*+'
+      blacklist:
+        - '(https?://)?www.google.com'
+
+
+    #---------- MOD WAF ----------#
+    # This mod enables the Spring's built-in StrictHTTPFirewall
+    waf:
+      enabled: false
+      allows:
+        backslash: false
+        url-encoded-double-slash: true
+        url-uncoded-percent: false
+        url-encoded-period: false
+        url-encoded-slash: false
+        semicolon: false
+        host-names: # can be left empty or a list of hostNames can be specified
+        http-methods:
+          - GET
+          - HEAD
+          - POST

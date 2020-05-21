@@ -1,8 +1,6 @@
 package com.robertoman.sproxy.mod.headers;
 
-import com.google.gson.Gson;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -21,8 +19,7 @@ import java.util.regex.Pattern;
 @ConditionalOnProperty(value = "config.mod.headers.enabled", havingValue = "true")
 public class ModHeadersConfig {
 
-    @Getter
-    @Setter
+    @Data
     @Slf4j
     public static class ModHeaders {
 
@@ -80,12 +77,6 @@ public class ModHeadersConfig {
                     }
                 });
             }
-        }
-
-        @Override
-        public String toString() {
-            Gson gson = new Gson();
-            return gson.toJson(this);
         }
     }
 

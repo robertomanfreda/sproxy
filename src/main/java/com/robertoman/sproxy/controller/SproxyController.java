@@ -1,27 +1,25 @@
-package com.robertoman.sproxy.controllers;
+package com.robertoman.sproxy.controller;
 
-import com.robertoman.sproxy.annotations.Logging;
-import com.robertoman.sproxy.exceptions.ProxyException;
+import com.robertoman.sproxy.annotation.Logging;
+import com.robertoman.sproxy.annotation.ModUrl;
+import com.robertoman.sproxy.exception.ProxyException;
 import com.robertoman.sproxy.mod.headers.ModHeadersConfig.ModHeaders.TypeHeader;
-import com.robertoman.sproxy.mod.headers.ModHeadersConfig.ModHeadersRequest;
-import com.robertoman.sproxy.mod.headers.ModHeadersConfig.ModHeadersResponse;
-import com.robertoman.sproxy.mod.url.annotation.ModUrl;
-import com.robertoman.sproxy.services.ProxyService;
-import com.robertoman.sproxy.utils.Extractor;
-import lombok.RequiredArgsConstructor;
+import com.robertoman.sproxy.mod.headers.ModHeadersService;
+import com.robertoman.sproxy.service.ProxyService;
+import com.robertoman.sproxy.util.Extractor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpHead;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.*;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.*;
+import org.springframework.lang.Nullable;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,40 +39,37 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.robertoman.sproxy.utils.Constants.INDEX_HTML;
+import static com.robertoman.sproxy.util.Constants.INDEX_HTML;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-@RequiredArgsConstructor
 @RestController
 @Slf4j
 public class SproxyController {
 
     private final ProxyService proxyService;
     private final HttpServletRequest httpServletRequest;
-    private final ModHeadersRequest modHeadersRequest;
-    private final ModHeadersResponse modHeadersResponse;
+    private final ModHeadersService modHeadersService;
+
+    @Value("${config.show-homepage}")
+    private boolean showHomepage;
+
+    public SproxyController(ProxyService proxyService, HttpServletRequest httpServletRequest,
+                            @Nullable ModHeadersService modHeadersService) {
+        this.proxyService = proxyService;
+        this.httpServletRequest = httpServletRequest;
+        this.modHeadersService = modHeadersService;
+    }
 
     @GetMapping({"", "/"})
     public String index() {
-        return INDEX_HTML;
+        if (showHomepage) return INDEX_HTML;
+        return null;
     }
 
     @GetMapping("/favicon.ico")
     public void noFavicon() {
     }
 
-    /**
-     * Request has body                 No
-     * Successful response has body     No
-     * Safe 	                        Yes
-     * Idempotent                       Yes
-     * Cacheable                        Yes
-     * Allowed in HTML forms            No
-     *
-     * @return {@link ResponseEntity}
-     * @throws ProxyException // TODO ProxyException in HEAD
-     * @throws IOException    // TODO IOException in HEAD
-     */
     @Logging
     @ModUrl
     @RequestMapping(method = RequestMethod.HEAD, value = "/**")
@@ -84,18 +79,6 @@ public class SproxyController {
         return makeResponseEntity(proxyService.doProxy(requestEntity, httpRequest));
     }
 
-    /**
-     * Request has body                 No
-     * Successful response has body     Yes
-     * Safe 	                        Yes
-     * Idempotent                       Yes
-     * Cacheable                        Yes
-     * Allowed in HTML forms            No
-     *
-     * @return {@link ResponseEntity}
-     * @throws ProxyException // TODO ProxyException in GET
-     * @throws IOException    // TODO IOException in GET
-     */
     @Logging
     @ModUrl
     @RequestMapping(method = RequestMethod.GET, value = "/**", produces = MediaType.ALL_VALUE)
@@ -105,18 +88,6 @@ public class SproxyController {
         return makeResponseEntity(proxyService.doProxy(requestEntity, httpRequest));
     }
 
-    /**
-     * Request has body                 Yes
-     * Successful response has body     Yes
-     * Safe 	                        No
-     * Idempotent                       No
-     * Cacheable                        Only if freshness information is included
-     * Allowed in HTML forms            Yes
-     *
-     * @return {@link ResponseEntity}
-     * @throws ProxyException // TODO ProxyException in POST
-     * @throws IOException    // TODO IOException in POST
-     */
     @Logging
     @ModUrl
     @RequestMapping(method = RequestMethod.POST, value = "/**", consumes = MediaType.ALL_VALUE,
@@ -125,6 +96,36 @@ public class SproxyController {
     public ResponseEntity<?> post() throws ProxyException, IOException, ServletException {
         HttpEntity<?> requestEntity = makeRequestEntity();
         HttpPost httpRequest = new HttpPost(Extractor.extractEntityUrl(httpServletRequest));
+        setEntity(requestEntity, httpRequest);
+        return makeResponseEntity(proxyService.doProxy(requestEntity, httpRequest));
+    }
+
+    @Logging
+    @ModUrl
+    @RequestMapping(method = RequestMethod.PUT, value = "/**", consumes = MediaType.ALL_VALUE,
+            produces = MediaType.ALL_VALUE
+    )
+    public ResponseEntity<?> put() throws ProxyException, IOException, ServletException {
+        HttpEntity<?> requestEntity = makeRequestEntity();
+        HttpPut httpRequest = new HttpPut(Extractor.extractEntityUrl(httpServletRequest));
+        setEntity(requestEntity, httpRequest);
+        return makeResponseEntity(proxyService.doProxy(requestEntity, httpRequest));
+    }
+
+    private HttpEntity<?> makeRequestEntity() {
+        HttpHeaders httpHeaders = Extractor.extractHttpHeaders(httpServletRequest);
+
+        // MOD HEADERS -> request headers
+        if (null != modHeadersService) {
+            modHeadersService.getModHeadersRequest().mod(Extractor.extractEntityUrl(httpServletRequest), httpHeaders, TypeHeader.REQUEST);
+        }
+
+        Map<String, String> urlParameters = Extractor.extractQueryParameters(httpServletRequest);
+        return new HttpEntity<>(urlParameters, httpHeaders);
+    }
+
+    private <T extends HttpEntityEnclosingRequestBase> void setEntity(HttpEntity<?> requestEntity, T httpRequest)
+            throws IOException, ServletException {
 
         String type = httpServletRequest.getContentType();
         if (type.contains("application/x-www-form-urlencoded")) {
@@ -165,20 +166,6 @@ public class SproxyController {
                 httpRequest.setEntity(new StringEntity(body));
             }
         }
-
-        return makeResponseEntity(proxyService.doProxy(requestEntity, httpRequest));
-    }
-
-    private HttpEntity<?> makeRequestEntity() {
-        HttpHeaders httpHeaders = Extractor.extractHttpHeaders(httpServletRequest);
-
-        // MOD HEADERS -> request headers
-        if (null != modHeadersRequest) {
-            modHeadersRequest.mod(Extractor.extractEntityUrl(httpServletRequest), httpHeaders, TypeHeader.REQUEST);
-        }
-
-        Map<String, String> urlParameters = Extractor.extractQueryParameters(httpServletRequest);
-        return new HttpEntity<>(urlParameters, httpHeaders);
     }
 
     private ResponseEntity<?> makeResponseEntity(HttpResponse httpResponse) throws IOException {
@@ -189,8 +176,8 @@ public class SproxyController {
         );
 
         // MOD HEADERS -> response headers
-        if (null != modHeadersResponse) {
-            modHeadersResponse.mod(
+        if (null != modHeadersService) {
+            modHeadersService.getModHeadersResponse().mod(
                     Extractor.extractEntityUrl(httpServletRequest), responseHeaders, TypeHeader.RESPONSE
             );
         }
@@ -209,7 +196,6 @@ public class SproxyController {
                     Objects.requireNonNull(HttpStatus.resolve(httpResponse.getStatusLine().getStatusCode()))
             );
         }
-
     }
 
 }
