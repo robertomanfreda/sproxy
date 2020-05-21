@@ -11,9 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpHead;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.*;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
@@ -72,18 +70,6 @@ public class SproxyController {
     public void noFavicon() {
     }
 
-    /**
-     * Request has body                 No
-     * Successful response has body     No
-     * Safe 	                        Yes
-     * Idempotent                       Yes
-     * Cacheable                        Yes
-     * Allowed in HTML forms            No
-     *
-     * @return {@link ResponseEntity}
-     * @throws ProxyException // TODO ProxyException in HEAD
-     * @throws IOException    // TODO IOException in HEAD
-     */
     @Logging
     @ModUrl
     @RequestMapping(method = RequestMethod.HEAD, value = "/**")
@@ -93,18 +79,6 @@ public class SproxyController {
         return makeResponseEntity(proxyService.doProxy(requestEntity, httpRequest));
     }
 
-    /**
-     * Request has body                 No
-     * Successful response has body     Yes
-     * Safe 	                        Yes
-     * Idempotent                       Yes
-     * Cacheable                        Yes
-     * Allowed in HTML forms            No
-     *
-     * @return {@link ResponseEntity}
-     * @throws ProxyException // TODO ProxyException in GET
-     * @throws IOException    // TODO IOException in GET
-     */
     @Logging
     @ModUrl
     @RequestMapping(method = RequestMethod.GET, value = "/**", produces = MediaType.ALL_VALUE)
@@ -114,18 +88,6 @@ public class SproxyController {
         return makeResponseEntity(proxyService.doProxy(requestEntity, httpRequest));
     }
 
-    /**
-     * Request has body                 Yes
-     * Successful response has body     Yes
-     * Safe 	                        No
-     * Idempotent                       No
-     * Cacheable                        Only if freshness information is included
-     * Allowed in HTML forms            Yes
-     *
-     * @return {@link ResponseEntity}
-     * @throws ProxyException // TODO ProxyException in POST
-     * @throws IOException    // TODO IOException in POST
-     */
     @Logging
     @ModUrl
     @RequestMapping(method = RequestMethod.POST, value = "/**", consumes = MediaType.ALL_VALUE,
@@ -134,6 +96,36 @@ public class SproxyController {
     public ResponseEntity<?> post() throws ProxyException, IOException, ServletException {
         HttpEntity<?> requestEntity = makeRequestEntity();
         HttpPost httpRequest = new HttpPost(Extractor.extractEntityUrl(httpServletRequest));
+        setEntity(requestEntity, httpRequest);
+        return makeResponseEntity(proxyService.doProxy(requestEntity, httpRequest));
+    }
+
+    @Logging
+    @ModUrl
+    @RequestMapping(method = RequestMethod.PUT, value = "/**", consumes = MediaType.ALL_VALUE,
+            produces = MediaType.ALL_VALUE
+    )
+    public ResponseEntity<?> put() throws ProxyException, IOException, ServletException {
+        HttpEntity<?> requestEntity = makeRequestEntity();
+        HttpPut httpRequest = new HttpPut(Extractor.extractEntityUrl(httpServletRequest));
+        setEntity(requestEntity, httpRequest);
+        return makeResponseEntity(proxyService.doProxy(requestEntity, httpRequest));
+    }
+
+    private HttpEntity<?> makeRequestEntity() {
+        HttpHeaders httpHeaders = Extractor.extractHttpHeaders(httpServletRequest);
+
+        // MOD HEADERS -> request headers
+        if (null != modHeadersService) {
+            modHeadersService.getModHeadersRequest().mod(Extractor.extractEntityUrl(httpServletRequest), httpHeaders, TypeHeader.REQUEST);
+        }
+
+        Map<String, String> urlParameters = Extractor.extractQueryParameters(httpServletRequest);
+        return new HttpEntity<>(urlParameters, httpHeaders);
+    }
+
+    private <T extends HttpEntityEnclosingRequestBase> void setEntity(HttpEntity<?> requestEntity, T httpRequest)
+            throws IOException, ServletException {
 
         String type = httpServletRequest.getContentType();
         if (type.contains("application/x-www-form-urlencoded")) {
@@ -174,20 +166,6 @@ public class SproxyController {
                 httpRequest.setEntity(new StringEntity(body));
             }
         }
-
-        return makeResponseEntity(proxyService.doProxy(requestEntity, httpRequest));
-    }
-
-    private HttpEntity<?> makeRequestEntity() {
-        HttpHeaders httpHeaders = Extractor.extractHttpHeaders(httpServletRequest);
-
-        // MOD HEADERS -> request headers
-        if (null != modHeadersService) {
-            modHeadersService.getModHeadersRequest().mod(Extractor.extractEntityUrl(httpServletRequest), httpHeaders, TypeHeader.REQUEST);
-        }
-
-        Map<String, String> urlParameters = Extractor.extractQueryParameters(httpServletRequest);
-        return new HttpEntity<>(urlParameters, httpHeaders);
     }
 
     private ResponseEntity<?> makeResponseEntity(HttpResponse httpResponse) throws IOException {
