@@ -25,7 +25,6 @@ eureka:
       # if eureka is secured
       #user.name: ${config.eureka-client.username}
       #user.password: ${config.eureka-client.password}
-      build.version: ${info.app.version}
 
 management:
   endpoints:

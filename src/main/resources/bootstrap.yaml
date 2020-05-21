@@ -1,6 +1,9 @@
 eureka:
   client:
     enabled: false
+  instance:
+    metadata-map:
+      build.version: ${info.app.version}
 
 info:
   app:
