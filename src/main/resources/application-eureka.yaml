@@ -1,0 +1,32 @@
+config:
+  eureka-server:
+    proto: http
+    base: localhost
+    port: 7000
+    # if eureka is secured
+    #eureka-client:
+      #username: user
+      #password: pass
+
+eureka:
+  client:
+    enabled: false
+    service-url:
+      # if eureka is secured
+      #defaultZone: ${config.eureka-server.proto}://${config.eureka-client.username}:${config.eureka-client.password}@${config.eureka-server.base}:${config.eureka-server.port}/eureka
+      defaultZone: ${config.eureka-server.proto}://${config.eureka-server.base}:${config.eureka-server.port}/eureka
+  instance:
+    hostname: ${spring.application.name}
+    metadata-map:
+      # if eureka is secured
+      #user.name: ${config.eureka-client.username}
+      #user.password: ${config.eureka-client.password}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
