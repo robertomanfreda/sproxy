@@ -32,8 +32,8 @@ config:
                                           - 'Bat: baz'
                                           - 'Another-Custom-Header: custom'
           (https?://)?(www.)?google.(com|it)(/.*)?:
-            - 'An-Header: 1'
-            - 'Another-Header: 2'
+                                                  - 'An-Header: 1'
+                                                  - 'Another-Header: 2'
       # The same as for the request headers
       response:
         allow-overrides: false
