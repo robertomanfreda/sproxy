@@ -48,29 +48,39 @@ to send the request and which parameters should be used.
 Sproxy provides different features to enable some extras.
 
 Available features:
-- FEATURE TLS
+- **FEATURE TLS**
   - With this feature you will be able to set up TLS. Sproxy starts on port 8080 by default but enabling TLS it will
     start on port 8443.  
-    You can also set up the http to https redirection, just assigning `true` to the `http-to-https` property in the
+    You can also set up *<u>the http to https redirection</u>, just assigning `true` to the `http-to-https` property in the
     configuration file.  
     Supported keystore (how to create a keystore is out of scope but search on google, you will find how to do it) types 
     are:   
       - PKCS12
       - JKS
 
+###### *<u>http to https redirection</u>:   
+**The http to https redirection will redirect ALWAYS using ONLY the GET http verb.**  
+F.I. if you try to call Sproxy using the POST verb you'll notice a correct redirection but as result the proxied method 
+will be ALWAYS a GET (the proxied server will receive a GET request).  
+**Why?**  
+Essentially because if you are making a redirection from http to https using POST or another verb you are sending 
+sensitive data through an insecure channel, so it just doesn't make sense to do that. This would be a vulnerability.  
+This is not an invention, it is a guideline! So if you are using redirection you will be forced to give the https url to 
+the clients, for verbs != GET, in order to establish the connection on a secure channel.  
+
 ---
 ###### Sproxy mods
 With Sproxy is also possible using "mods".
 
 Available mods:   
-- MOD HEADERS   
+- **MOD HEADERS**   
     - Thanks to this mod it is possible to modify both request and response headers.
-- MOD URL  
+- **MOD URL**  
     - This mod permits to define a whitelist and a blacklist to grant or deny the destination urls that Sproxy will be 
       able to reach.
-- MOD SECURITY  
+- **MOD SECURITY**  
     - This mod is still not available... interesting features about session management and authentication will be added.
-- MOD WAF  
+- **MOD WAF**  
     - Through this mode Sproxy is able to enable the Spring's built-in StrictHttpFirewall.  
 
 ---

@@ -1,6 +1,10 @@
 spring:
   application:
     name: sproxy
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
 
 eureka:
   client:
