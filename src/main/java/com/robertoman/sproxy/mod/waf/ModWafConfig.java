@@ -63,6 +63,7 @@ public class ModWafConfig extends WebSecurityConfigurerAdapter {
 
         if (null != hostNames && hostNames.size() > 0) {
             firewall.setAllowedHostnames((h) -> hostNames.stream().anyMatch(hn -> hn.equals(h)));
+            log.debug("Allowed hostnames from configuration are [{}]", hostNames.toString());
         }
 
         firewall.setAllowedHttpMethods(httpMethods);

@@ -19,11 +19,12 @@ public class BannerConfig {
     }
 
     private static void printBanner() {
-        String banner = ANSI_GREEN + "\n+----  +---+  +---+  +---+  *   *  \\   /" + ANSI_RESET +
-                ANSI_GREEN + "\n|      |   |  |   |  |   |   \\ /    \\ /" + ANSI_RESET +
-                ANSI_WHITE + "\n+---+  |---+  |---+  |   |    *      |" + ANSI_RESET +
-                ANSI_RED + "\n    |  |      | \\    |   |   / \\     |" + ANSI_RESET +
-                ANSI_RED + "\n----+  |      |  \\   +---+  *   *    |" + ANSI_RESET;
+        String banner =
+                ANSI_GREEN + "\n+----+  +-----+  +-----+  +-----+  *   *  \\   /" + ANSI_RESET +
+                ANSI_GREEN + "\n||      ||   ||  ||   ||  ||   ||   \\ /    \\ /" + ANSI_RESET +
+                ANSI_WHITE + "\n+----+  ||----+  ||----+  ||   ||    *      !" + ANSI_RESET +
+                ANSI_RED + "\n    ||  ||       || \\\\    ||   ||   / \\     |" + ANSI_RESET +
+                ANSI_RED + "\n+----+  ||       ||  \\\\   +-----+  *   *    !" + ANSI_RESET;
 
         log.info(banner);
     }

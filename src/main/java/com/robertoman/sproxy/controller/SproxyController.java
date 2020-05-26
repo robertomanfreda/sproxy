@@ -8,6 +8,7 @@ import com.robertoman.sproxy.mod.headers.ModHeadersService;
 import com.robertoman.sproxy.service.ProxyService;
 import com.robertoman.sproxy.util.Extractor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -72,10 +73,10 @@ public class SproxyController {
 
     @Logging
     @ModUrl
-    @RequestMapping(method = RequestMethod.HEAD, value = "/**")
-    public ResponseEntity<?> head() throws ProxyException, IOException {
+    @RequestMapping(method = RequestMethod.DELETE, value = "/**", produces = MediaType.ALL_VALUE)
+    public ResponseEntity<?> delete() throws ProxyException, IOException {
         HttpEntity<?> requestEntity = makeRequestEntity();
-        HttpHead httpRequest = new HttpHead(Extractor.extractEntityUrl(httpServletRequest));
+        HttpDelete httpRequest = new HttpDelete(Extractor.extractEntityUrl(httpServletRequest));
         return makeResponseEntity(proxyService.doProxy(requestEntity, httpRequest));
     }
 
@@ -85,6 +86,36 @@ public class SproxyController {
     public ResponseEntity<?> get() throws ProxyException, IOException {
         HttpEntity<?> requestEntity = makeRequestEntity();
         HttpGet httpRequest = new HttpGet(Extractor.extractEntityUrl(httpServletRequest));
+        return makeResponseEntity(proxyService.doProxy(requestEntity, httpRequest));
+    }
+
+    @Logging
+    @ModUrl
+    @RequestMapping(method = RequestMethod.HEAD, value = "/**")
+    public ResponseEntity<?> head() throws ProxyException, IOException {
+        HttpEntity<?> requestEntity = makeRequestEntity();
+        HttpHead httpRequest = new HttpHead(Extractor.extractEntityUrl(httpServletRequest));
+        return makeResponseEntity(proxyService.doProxy(requestEntity, httpRequest));
+    }
+
+    @Logging
+    @ModUrl
+    @RequestMapping(method = RequestMethod.OPTIONS, value = "/**")
+    public ResponseEntity<?> options() throws ProxyException, IOException {
+        HttpEntity<?> requestEntity = makeRequestEntity();
+        HttpOptions httpRequest = new HttpOptions(Extractor.extractEntityUrl(httpServletRequest));
+        return makeResponseEntity(proxyService.doProxy(requestEntity, httpRequest));
+    }
+
+    @Logging
+    @ModUrl
+    @RequestMapping(method = RequestMethod.PATCH, value = "/**", consumes = MediaType.ALL_VALUE,
+            produces = MediaType.ALL_VALUE
+    )
+    public ResponseEntity<?> patch() throws ProxyException, IOException, ServletException {
+        HttpEntity<?> requestEntity = makeRequestEntity();
+        HttpPatch httpRequest = new HttpPatch(Extractor.extractEntityUrl(httpServletRequest));
+        setEntity(requestEntity, httpRequest);
         return makeResponseEntity(proxyService.doProxy(requestEntity, httpRequest));
     }
 
@@ -124,7 +155,7 @@ public class SproxyController {
         return new HttpEntity<>(urlParameters, httpHeaders);
     }
 
-    private <T extends HttpEntityEnclosingRequestBase> void setEntity(HttpEntity<?> requestEntity, T httpRequest)
+    private <T extends HttpEntityEnclosingRequest> void setEntity(HttpEntity<?> requestEntity, T httpRequest)
             throws IOException, ServletException {
 
         String type = httpServletRequest.getContentType();

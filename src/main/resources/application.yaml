@@ -12,7 +12,7 @@ config:
       http-to-https: true
       key-alias: sproxy
       key-store-password: sproxy
-      key-store: 'classpath:sproxy.p12'
+      key-store: '/home/roberto/sproxy/src/main/resources/sproxy.p12'
       # Supported keystore types are: PKCS12, JKS - Preferred keystore type is: PKCS12
       key-store-type: PKCS12
 

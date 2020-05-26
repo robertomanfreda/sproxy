@@ -1,28 +1,25 @@
 # Sproxy
 ![Java CI with Maven](https://github.com/robertomanfreda/sproxy/workflows/Java%20CI%20with%20Maven/badge.svg)
 
-#### A Proxy developed using the Spring Framework and Java  
+#### A Proxy developed using Spring Boot, Java and docker  
 
 ---
- 
 ###### What is Sproxy
 
 Sproxy is a real proxy, it captures the requests (all supported types by the Spring framework) and forwards them to the
-requested url, applying different types of modifications:  
+requested url, applying different types of modifications.
 
-HTTP METHOD     | IMPLEMENTATION STATE
---------------- | ---------------
-GET             | implemented
-HEAD            | implemented
-POST            | implemented
-DELETE          | not implemented
-OPTIONS         | not implemented
-PATCH           | not implemented
-PUT             | implemented
-TRACE           | not implemented   
+Supported HTTP methods are:    
+ - GET
+ - HEAD
+ - POST
+ - DELETE
+ - OPTIONS
+ - PATCH
+ - PUT
 
 ---
-###### Sproxy features
+###### Sproxy as transparent proxy
 
 It is possible to specify the protocol, for instance specifying HTTP   
 `http://localhost:8080/http://postman-echo.com/get?foo1=bar1`  
@@ -51,37 +48,61 @@ to send the request and which parameters should be used.
 Sproxy provides different features to enable some extras.
 
 Available features:
-- FEATURE TLS
+- **FEATURE TLS**
   - With this feature you will be able to set up TLS. Sproxy starts on port 8080 by default but enabling TLS it will
     start on port 8443.  
-    You can also set up the http to https redirection, just assigning `true` to the `http-to-https` property in the
+    You can also set up *<u>the http to https redirection</u>, just assigning `true` to the `http-to-https` property in the
     configuration file.  
     Supported keystore (how to create a keystore is out of scope but search on google, you will find how to do it) types 
     are:   
       - PKCS12
       - JKS
 
+###### *<u>http to https redirection</u>:   
+**The http to https redirection will redirect ALWAYS using ONLY the GET http verb.**  
+F.I. if you try to call Sproxy using the POST verb you'll notice a correct redirection but as result the proxied method 
+will be ALWAYS a GET (the proxied server will receive a GET request).  
+**Why?**  
+Essentially because if you are making a redirection from http to https using POST or another verb you are sending 
+sensitive data through an insecure channel, so it just doesn't make sense to do that. This would be a vulnerability.  
+This is not an invention, it is a guideline! So if you are using redirection you will be forced to give the https url to 
+the clients, for verbs != GET, in order to establish the connection on a secure channel.  
+
 ---
 ###### Sproxy mods
 With Sproxy is also possible using "mods".
 
 Available mods:   
-- MOD HEADERS   
+- **MOD HEADERS**   
     - Thanks to this mod it is possible to modify both request and response headers.
-- MOD URL  
+- **MOD URL**  
     - This mod permits to define a whitelist and a blacklist to grant or deny the destination urls that Sproxy will be 
       able to reach.
-- MOD SECURITY  
+- **MOD SECURITY**  
     - This mod is still not available... interesting features about session management and authentication will be added.
-- MOD WAF  
+- **MOD WAF**  
     - Through this mode Sproxy is able to enable the Spring's built-in StrictHttpFirewall.  
 
 ---
+###### Why should I use Sproxy?
+Because Sproxy provides several levels of security and conveniences!  
+You could use it as a transparent proxy but enabling extra features.  
+It can be extremely useful when you need to resolve CORS related issues or more generally when you need to modify both
+request or response headers.  
+If you need to enable https for your endpoints you could simply enable https on Sproxy and he will take care of 
+transporting traffic to others services in http reporting the responses to the client using https.  
+It's useful when you need to restrict the access for specific urls, you can do it by using the MOD URL, mixing 
+white-listing and black-listing.  
+Improve security making Sproxy acts as a Web Application Firewall, it uses the powerful built-in Spring Boot 
+StrictHttpFirewall.  
+Others interesting features like session management and users authentication are coming, it will be possible to assign
+users credentials in order to restrict the access using both Bearer and Basic authentication.  
 
+---
 ###### Sproxy and docker
-Project Sproxy is strictly connected to docker, all the development process was executed on it. So if you want to
-run it out of the docker context you are free to do it but you'll not find any useful information about configuration
-or other stuff here.
+Project Sproxy is strictly connected to docker in order to retrace the java WORA (Write Once Run Anywhere) concept 
+with extreme simplicity and portability. So if you want to run it out of the docker context (it's possible too) you are 
+free to do it but you'll not find any useful information about configuration or other stuff here.
 
 Here's a minimal docker compose file (is everything you need) useful to run Sproxy:   
 **docker-compose.yaml**  
@@ -249,8 +270,6 @@ management:
       show-details: always
 ```
 
----
-
 If you don't want to provide any external properties file you can compile Sproxy from sources:
 - `git clone https://github.com/robertomanfreda/sproxy.git`
 - `cd sproxy`
@@ -259,3 +278,10 @@ If you don't want to provide any external properties file you can compile Sproxy
 - `docker build -t com.robertoman/sproxy:custom .`
 - `docker run -d --name sproxy com.robertoman/sproxy:custom` mapping ports, config folder 
    and logs volumes as you prefer 
+
+---
+###### Testing Sproxy
+
+More content will be added
+
+---
