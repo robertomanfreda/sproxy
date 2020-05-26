@@ -92,7 +92,7 @@ users credentials in order to restrict the access using both Bearer and Basic au
 
 ---
 ###### Sproxy and docker
-Project Sproxy is strictly connected to docker in order to retrace the java WORA (Write Once Run Aniwhere) concept 
+Project Sproxy is strictly connected to docker in order to retrace the java WORA (Write Once Run Anywhere) concept 
 with extreme simplicity and portability. So if you want to run it out of the docker context (it's possible too) you are 
 free to do it but you'll not find any useful information about configuration or other stuff here.
 
