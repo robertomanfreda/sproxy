@@ -8,6 +8,7 @@ import com.robertoman.sproxy.mod.headers.ModHeadersService;
 import com.robertoman.sproxy.service.ProxyService;
 import com.robertoman.sproxy.util.Extractor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -68,6 +69,15 @@ public class SproxyController {
 
     @GetMapping("/favicon.ico")
     public void noFavicon() {
+    }
+
+    @Logging
+    @ModUrl
+    @RequestMapping(method = RequestMethod.DELETE, value = "/**", produces = MediaType.ALL_VALUE)
+    public ResponseEntity<?> delete() throws ProxyException, IOException {
+        HttpEntity<?> requestEntity = makeRequestEntity();
+        HttpDelete httpRequest = new HttpDelete(Extractor.extractEntityUrl(httpServletRequest));
+        return makeResponseEntity(proxyService.doProxy(requestEntity, httpRequest));
     }
 
     @Logging
@@ -145,7 +155,7 @@ public class SproxyController {
         return new HttpEntity<>(urlParameters, httpHeaders);
     }
 
-    private <T extends HttpEntityEnclosingRequestBase> void setEntity(HttpEntity<?> requestEntity, T httpRequest)
+    private <T extends HttpEntityEnclosingRequest> void setEntity(HttpEntity<?> requestEntity, T httpRequest)
             throws IOException, ServletException {
 
         String type = httpServletRequest.getContentType();
