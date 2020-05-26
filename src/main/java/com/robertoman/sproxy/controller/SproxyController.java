@@ -72,6 +72,15 @@ public class SproxyController {
 
     @Logging
     @ModUrl
+    @RequestMapping(method = RequestMethod.GET, value = "/**", produces = MediaType.ALL_VALUE)
+    public ResponseEntity<?> get() throws ProxyException, IOException {
+        HttpEntity<?> requestEntity = makeRequestEntity();
+        HttpGet httpRequest = new HttpGet(Extractor.extractEntityUrl(httpServletRequest));
+        return makeResponseEntity(proxyService.doProxy(requestEntity, httpRequest));
+    }
+
+    @Logging
+    @ModUrl
     @RequestMapping(method = RequestMethod.HEAD, value = "/**")
     public ResponseEntity<?> head() throws ProxyException, IOException {
         HttpEntity<?> requestEntity = makeRequestEntity();
@@ -81,10 +90,22 @@ public class SproxyController {
 
     @Logging
     @ModUrl
-    @RequestMapping(method = RequestMethod.GET, value = "/**", produces = MediaType.ALL_VALUE)
-    public ResponseEntity<?> get() throws ProxyException, IOException {
+    @RequestMapping(method = RequestMethod.OPTIONS, value = "/**")
+    public ResponseEntity<?> options() throws ProxyException, IOException {
         HttpEntity<?> requestEntity = makeRequestEntity();
-        HttpGet httpRequest = new HttpGet(Extractor.extractEntityUrl(httpServletRequest));
+        HttpOptions httpRequest = new HttpOptions(Extractor.extractEntityUrl(httpServletRequest));
+        return makeResponseEntity(proxyService.doProxy(requestEntity, httpRequest));
+    }
+
+    @Logging
+    @ModUrl
+    @RequestMapping(method = RequestMethod.PATCH, value = "/**", consumes = MediaType.ALL_VALUE,
+            produces = MediaType.ALL_VALUE
+    )
+    public ResponseEntity<?> patch() throws ProxyException, IOException, ServletException {
+        HttpEntity<?> requestEntity = makeRequestEntity();
+        HttpPatch httpRequest = new HttpPatch(Extractor.extractEntityUrl(httpServletRequest));
+        setEntity(requestEntity, httpRequest);
         return makeResponseEntity(proxyService.doProxy(requestEntity, httpRequest));
     }
 

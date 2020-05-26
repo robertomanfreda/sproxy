@@ -1,10 +1,9 @@
 # Sproxy
 ![Java CI with Maven](https://github.com/robertomanfreda/sproxy/workflows/Java%20CI%20with%20Maven/badge.svg)
 
-#### A Proxy developed using the Spring Framework and Java  
+#### A Proxy developed using Spring Boot, Java and docker  
 
 ---
- 
 ###### What is Sproxy
 
 Sproxy is a real proxy, it captures the requests (all supported types by the Spring framework) and forwards them to the
@@ -16,13 +15,13 @@ GET             | implemented
 HEAD            | implemented
 POST            | implemented
 DELETE          | not implemented
-OPTIONS         | not implemented
-PATCH           | not implemented
+OPTIONS         | implemented
+PATCH           | implemented
 PUT             | implemented
-TRACE           | not implemented   
+TRACE           | not implemented for security reasons   
 
 ---
-###### Sproxy features
+###### Sproxy as transparent proxy
 
 It is possible to specify the protocol, for instance specifying HTTP   
 `http://localhost:8080/http://postman-echo.com/get?foo1=bar1`  
@@ -77,11 +76,25 @@ Available mods:
     - Through this mode Sproxy is able to enable the Spring's built-in StrictHttpFirewall.  
 
 ---
+###### Why should I use Sproxy?
+Because Sproxy provides several levels of security and conveniences!  
+You could use it as a transparent proxy but enabling extra features.  
+It can be extremely useful when you need to resolve CORS related issues or more generally when you need to modify both
+request or response headers.  
+If you need to enable https for your endpoints you could simply enable https on Sproxy and he will take care of 
+transporting traffic to others services in http reporting the responses to the client using https.  
+It's useful when you need to restrict the access for specific urls, you can do it by using the MOD URL, mixing 
+white-listing and black-listing.  
+Improve security making Sproxy acts as a Web Application Firewall, it uses the powerful built-in Spring Boot 
+StrictHttpFirewall.  
+Others interesting features like session management and users authentication are coming, it will be possible to assign
+users credentials in order to restrict the access using both Bearer and Basic authentication.  
 
+---
 ###### Sproxy and docker
-Project Sproxy is strictly connected to docker, all the development process was executed on it. So if you want to
-run it out of the docker context you are free to do it but you'll not find any useful information about configuration
-or other stuff here.
+Project Sproxy is strictly connected to docker in order to retrace the java WORA (Write Once Run Aniwhere) concept 
+with extreme simplicity and portability. So if you want to run it out of the docker context (it's possible too) you are 
+free to do it but you'll not find any useful information about configuration or other stuff here.
 
 Here's a minimal docker compose file (is everything you need) useful to run Sproxy:   
 **docker-compose.yaml**  
@@ -249,8 +262,6 @@ management:
       show-details: always
 ```
 
----
-
 If you don't want to provide any external properties file you can compile Sproxy from sources:
 - `git clone https://github.com/robertomanfreda/sproxy.git`
 - `cd sproxy`
@@ -259,3 +270,10 @@ If you don't want to provide any external properties file you can compile Sproxy
 - `docker build -t com.robertoman/sproxy:custom .`
 - `docker run -d --name sproxy com.robertoman/sproxy:custom` mapping ports, config folder 
    and logs volumes as you prefer 
+
+---
+###### Testing Sproxy
+
+More content will be added
+
+---
