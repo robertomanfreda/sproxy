@@ -7,18 +7,16 @@
 ###### What is Sproxy
 
 Sproxy is a real proxy, it captures the requests (all supported types by the Spring framework) and forwards them to the
-requested url, applying different types of modifications:  
+requested url, applying different types of modifications.
 
-HTTP METHOD     | IMPLEMENTATION STATE
---------------- | ---------------
-GET             | implemented
-HEAD            | implemented
-POST            | implemented
-DELETE          | not implemented
-OPTIONS         | implemented
-PATCH           | implemented
-PUT             | implemented
-TRACE           | not implemented for security reasons   
+Supported HTTP methods are:    
+ - GET
+ - HEAD
+ - POST
+ - DELETE
+ - OPTIONS
+ - PATCH
+ - PUT
 
 ---
 ###### Sproxy as transparent proxy
