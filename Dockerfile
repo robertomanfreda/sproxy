@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk11:latest
+FROM adoptopenjdk/openjdk14:latest
 RUN mkdir -p /var/log/sproxy
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} app.jar
