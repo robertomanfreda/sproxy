@@ -28,6 +28,7 @@ public class DelayerAspect {
 
     @Before(value = "annotatedMethods()")
     public void delayBefore(JoinPoint jp) throws Throwable {
+        log.info("Sleeping some time... ({}s)", delay);
         Thread.sleep(delay);
     }
 
