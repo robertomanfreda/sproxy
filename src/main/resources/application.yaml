@@ -74,3 +74,9 @@ config:
           - GET
           - HEAD
           - POST
+
+    #---------- MOD DELAYER ----------#
+    # This mod enables the delayer mod
+    delayer:
+      enabled: true
+      delay: 5000

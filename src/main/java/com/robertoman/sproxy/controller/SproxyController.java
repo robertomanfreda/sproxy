@@ -1,5 +1,6 @@
 package com.robertoman.sproxy.controller;
 
+import com.robertoman.sproxy.annotation.Delayed;
 import com.robertoman.sproxy.annotation.Logging;
 import com.robertoman.sproxy.annotation.ModUrl;
 import com.robertoman.sproxy.exception.ProxyException;
@@ -72,6 +73,7 @@ public class SproxyController {
     }
 
     @Logging
+    @Delayed
     @ModUrl
     @RequestMapping(method = RequestMethod.DELETE, value = "/**", produces = MediaType.ALL_VALUE)
     public ResponseEntity<?> delete() throws ProxyException, IOException {
@@ -81,6 +83,7 @@ public class SproxyController {
     }
 
     @Logging
+    @Delayed
     @ModUrl
     @RequestMapping(method = RequestMethod.GET, value = "/**", produces = MediaType.ALL_VALUE)
     public ResponseEntity<?> get() throws ProxyException, IOException {
@@ -90,6 +93,7 @@ public class SproxyController {
     }
 
     @Logging
+    @Delayed
     @ModUrl
     @RequestMapping(method = RequestMethod.HEAD, value = "/**")
     public ResponseEntity<?> head() throws ProxyException, IOException {
@@ -99,6 +103,7 @@ public class SproxyController {
     }
 
     @Logging
+    @Delayed
     @ModUrl
     @RequestMapping(method = RequestMethod.OPTIONS, value = "/**")
     public ResponseEntity<?> options() throws ProxyException, IOException {
@@ -108,6 +113,7 @@ public class SproxyController {
     }
 
     @Logging
+    @Delayed
     @ModUrl
     @RequestMapping(method = RequestMethod.PATCH, value = "/**", consumes = MediaType.ALL_VALUE,
             produces = MediaType.ALL_VALUE
@@ -120,6 +126,7 @@ public class SproxyController {
     }
 
     @Logging
+    @Delayed
     @ModUrl
     @RequestMapping(method = RequestMethod.POST, value = "/**", consumes = MediaType.ALL_VALUE,
             produces = MediaType.ALL_VALUE
@@ -132,6 +139,7 @@ public class SproxyController {
     }
 
     @Logging
+    @Delayed
     @ModUrl
     @RequestMapping(method = RequestMethod.PUT, value = "/**", consumes = MediaType.ALL_VALUE,
             produces = MediaType.ALL_VALUE
